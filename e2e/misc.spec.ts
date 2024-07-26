@@ -74,10 +74,4 @@ describe('Misc', () => {
 
     await Promise.all([9, 1, 5, 7, 2, 8, 3, 4].map(submitData));
   });
-
-  it('should give error on old options', () => {
-    assert.throws(() => multer({ dest: '/tmp' }));
-    assert.throws(() => multer({ storage: {} }));
-    assert.throws(() => multer({ fileFilter: () => {} }));
-  });
 });

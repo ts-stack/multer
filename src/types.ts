@@ -22,78 +22,48 @@ export interface MulterFileFilter {
   (file: MulterFile): void;
 }
 
+/**
+ * An object specifying the size limits of the optional properties.
+ * Multer passes this object into busboy directly, and the details of the properties
+ * can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+ */
 export interface MulterLimits {
-  /** Maximum size of each form field name in bytes. (Default: 100) */
+  /**
+   * Maximum size of each form field name in bytes. (Default: 100).
+   */
   fieldNameSize?: number;
-  /** Maximum size of each form field value in bytes. (Default: 1048576) */
+  /**
+   * Maximum size of each form field value in bytes. (Default: 1048576).
+   */
   fieldSize?: number;
-  /** Maximum number of non-file form fields. (Default: Infinity) */
+  /**
+   * Maximum number of non-file form fields. (Default: Infinity).
+   */
   fields?: number;
-  /** Maximum size of each file in bytes. (Default: Infinity) */
+  /**
+   * Maximum size of each file in bytes. (Default: Infinity).
+   */
   fileSize?: number;
-  /** Maximum number of file fields. (Default: Infinity) */
+  /**
+   * Maximum number of file fields. (Default: Infinity).
+   */
   files?: number;
-  /** Maximum number of parts (non-file fields + files). (Default: Infinity) */
-  parts?: number;
-  /** Maximum number of headers. (Default: 2000) */
+  /**
+   * Maximum number of headers. (Default: 2000).
+   */
   headerPairs?: number;
 }
 
-/** Options for initializing a Multer instance. */
+/**
+ * Options for initializing a Multer instance.
+ */
 export interface MulterOptions {
   /**
-   * A `StorageEngine` responsible for processing files uploaded via Multer.
-   * Takes precedence over `dest`.
-   */
-  storage?: any;
-  /**
-   * The destination directory for uploaded files. If `storage` is not set
-   * and `dest` is, Multer will create a `DiskStorage` instance configured
-   * to store files at `dest` with random filenames.
-   *
-   * Ignored if `storage` is set.
-   */
-  dest?: string;
-  /**
-   * An object specifying various limits on incoming data. This object is
-   * passed to Busboy directly, and the details of properties can be found
-   * at https://github.com/mscdex/busboy#busboy-methods.
+   * An object specifying the size limits of the optional properties.
+   * Multer passes this object into busboy directly, and the details of the properties
+   * can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
    */
   limits?: MulterLimits;
-  /** Preserve the full path of the original filename rather than the basename. (Default: false) */
-  preservePath?: boolean;
-  /**
-   * Optional function to control which files are uploaded. This is called
-   * for every file that is processed.
-   */
-  fileFilter?: MulterFileFilter;
-  fileStrategy?: FileStrategy;
-}
-
-export interface DiskStorageOptions {
-  /**
-   * A string or function that determines the destination path for uploaded
-   * files. If a string is passed and the directory does not exist, Multer
-   * attempts to create it recursively. If neither a string or a function
-   * is passed, the destination defaults to `os.tmpdir()`.
-   *
-   * @param req The Express `Req` object.
-   * @param file Object containing information about the processed file.
-   * @param callback Callback to determine the destination path.
-   */
-  destination?:
-    | string
-    | ((req: Req, file: MulterFile, callback: (error: Error | null, destination?: string) => void) => void);
-  /**
-   * A function that determines the name of the uploaded file. If nothing
-   * is passed, Multer will generate a 32 character pseudorandom hex string
-   * with no extension.
-   *
-   * @param req The Express `Req` object.
-   * @param file Object containing information about the processed file.
-   * @param callback Callback to determine the name of the uploaded file.
-   */
-  filename?(req: Req, file: MulterFile, callback: (error: Error | null, filename: string) => void): void;
 }
 
 /**
@@ -101,46 +71,55 @@ export interface DiskStorageOptions {
  * that field name to accept.
  */
 export interface MulterField {
-  /** The field name. */
+  /**
+   * The field name.
+   */
   name: string;
-  /** Optional maximum number of files per field to accept. (Default: Infinity) */
+  /**
+   * Optional maximum number of files per field to accept. (Default: Infinity).
+   */
   maxCount?: number;
 }
 
-/** Object containing file metadata and access information. */
+/**
+ * File information.
+ */
 export interface MulterFile {
+  path: string;
   extension: string;
   hash: string;
-  detectedMimeType: string | null;
-  detectedFileExtension: string;
-  originalName: string;
-  clientReportedMimeType: string;
-  clientReportedFileExtension: string;
-  /** Name of the form field associated with this file. */
-  fieldName: string;
-  /** Name of the file on the uploader's computer. */
-  originalname: string;
   /**
-   * Value of the `Content-Transfer-Encoding` header for this file.
-   * @deprecated since July 2015
-   * @see RFC 7578, Section 4.7
+   * Field name specified in the form.
    */
-  encoding: string;
-  /** Value of the `Content-Type` header for this file. */
-  mimetype: string;
-  /** Size of the file in bytes. */
+  fieldName: string;
+  /**
+   * Name of the file on the user's computer (`undefined` if no filename was supplied by the client).
+   */
+  originalName: string;
+  /**
+   * Total size of the file in bytes.
+   */
   size: number;
   /**
-   * A readable stream of this file. Only available to the `_handleFile`
-   * callback for custom `StorageEngine`s.
+   * Readable stream of file data.
    */
   stream: Readable;
-  /** `DiskStorage` only: Directory to which this file has been uploaded. */
-  destination: string;
-  /** `DiskStorage` only: Name of this file within `destination`. */
-  filename: string;
-  /** `DiskStorage` only: Full path to the uploaded file. */
-  path: string;
-  /** `MemoryStorage` only: A Buffer containing the entire file. */
-  buffer: Buffer;
+  /**
+   * The detected mime-type, or null if we failed to detect.
+   */
+  detectedMimeType: string | null;
+  /**
+   * The typical file extension for files of the detected type,
+   * or empty string if we failed to detect (with leading `.` to match `path.extname`)
+   */
+  detectedFileExtension: string;
+  /**
+   * The mime type reported by the client using the `Content-Type` header,
+   * or null if the header was absent.
+   */
+  clientReportedMimeType: string | null;
+  /**
+   * The extension of the file uploaded (as reported by `path.extname`).
+   */
+  clientReportedFileExtension: string;
 }
