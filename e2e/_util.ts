@@ -6,7 +6,7 @@ import FormData from 'form-data';
 
 import hasha from 'hasha';
 import _onFinished from 'on-finished';
-import { Middleware, MulterFile, Req } from '#lib/interfaces.js';
+import { Middleware, MulterFile, Req } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 

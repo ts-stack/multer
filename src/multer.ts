@@ -2,7 +2,7 @@ import bytes from 'bytes';
 
 import createFileFilter from './file-filter.js';
 import createMiddleware from './middleware.js';
-import { FileStrategy, MulterField, MulterLimits, MulterOptions } from './interfaces.js';
+import { FileStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
 const kLimits = Symbol('limits');
 

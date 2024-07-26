@@ -1,4 +1,4 @@
-import { FilesInObject, FileStrategy, MulterField, MulterFile, Req } from './interfaces.js';
+import { FilesInObject, FileStrategy, MulterField, MulterFile, Req } from './types.js';
 
 export default function createFileAppender(strategy: FileStrategy, req: Req, fields: MulterField[]) {
   switch (strategy) {

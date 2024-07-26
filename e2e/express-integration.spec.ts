@@ -9,7 +9,7 @@ import _onFinished from 'on-finished';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { AnyFn, Middleware, Req, Res } from '#lib/interfaces.js';
+import { AnyFn, Middleware, Req, Res } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 

@@ -6,7 +6,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { AnyFn, MulterField, MulterLimits, Req } from '#lib/interfaces.js';
+import { AnyFn, MulterField, MulterLimits, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {

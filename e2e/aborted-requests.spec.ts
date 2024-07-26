@@ -6,7 +6,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { AnyFn, Req } from '#lib/interfaces.js';
+import { AnyFn, Req } from '#lib/types.js';
 
 function getLength(form: FormData) {
   return promisify(form.getLength).call(form);

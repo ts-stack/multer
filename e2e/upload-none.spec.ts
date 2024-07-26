@@ -3,7 +3,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { Middleware } from '#lib/interfaces.js';
+import { Middleware } from '#lib/types.js';
 
 describe('upload.none', () => {
   let parser: Middleware;

@@ -4,7 +4,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { MulterFile } from '#lib/interfaces.js';
+import { MulterFile } from '#lib/types.js';
 
 describe('Misc', () => {
   it('should handle unicode filenames', async () => {

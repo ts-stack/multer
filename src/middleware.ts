@@ -5,7 +5,7 @@ import is from 'type-is';
 
 import createFileAppender from './file-appender.js';
 import readBody from './read-body.js';
-import { AnyFn, Req } from './interfaces.js';
+import { AnyFn, Req } from './types.js';
 
 async function handleRequest(setup: AnyFn, req: Req) {
   const options = setup();
