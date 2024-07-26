@@ -1,17 +1,17 @@
-import { MulterFilesInObject, MulterStrategy, MulterField, MulterFile, Req } from './types.js';
+import { MulterFilesInObject, MulterStrategy, MulterField, MulterFile } from './types.js';
 
-export function createFileAppender(strategy: MulterStrategy, req: Req, fields: MulterField[]) {
+export function createFileAppender(strategy: MulterStrategy, obj: { file?: any; files?: any }, fields: MulterField[]) {
   switch (strategy) {
     case 'NONE':
       break;
     case 'VALUE':
-      req.file = null;
+      obj.file = null;
       break;
     case 'ARRAY':
-      req.files = [];
+      obj.files = [];
       break;
     case 'OBJECT':
-      req.files = Object.create(null);
+      obj.files = Object.create(null);
       break;
     default:
       throw new Error(`Unknown file strategy: ${strategy}`);
@@ -19,20 +19,20 @@ export function createFileAppender(strategy: MulterStrategy, req: Req, fields: M
 
   if (strategy === 'OBJECT') {
     for (const field of fields) {
-      (req.files as MulterFilesInObject)[field.name] = [];
+      (obj.files as MulterFilesInObject)[field.name] = [];
     }
   }
 
   return function append(file: MulterFile) {
     switch (strategy) {
       case 'VALUE':
-        req.file = file;
+        obj.file = file;
         break;
       case 'ARRAY':
-        (req.files as MulterFile[]).push(file);
+        (obj.files as MulterFile[]).push(file);
         break;
       case 'OBJECT':
-        (req.files as MulterFilesInObject)[file.fieldName].push(file);
+        (obj.files as MulterFilesInObject)[file.fieldName].push(file);
         break;
     }
   };
