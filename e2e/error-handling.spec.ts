@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import stream from 'node:stream';
+import { PassThrough } from 'node:stream';
 import { promisify } from 'node:util';
 
 import FormData from 'form-data';
@@ -115,7 +115,7 @@ describe('Error Handling', () => {
   });
 
   it('should report errors from busboy constructor', async () => {
-    const req = new stream.PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as unknown as Req & { end: AnyFn };
     const upload = multer().single('tiny');
     const body = 'test';
 
@@ -130,7 +130,7 @@ describe('Error Handling', () => {
   });
 
   it('should report errors from busboy parsing', async () => {
-    const req = new stream.PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as unknown as Req & { end: AnyFn };
     const upload = multer().single('tiny');
     const boundary = 'AaB03x';
     const body = [

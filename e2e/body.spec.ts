@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import stream from 'node:stream';
+import { PassThrough } from 'node:stream';
 import { promisify } from 'node:util';
 
 import FormData from 'form-data';
@@ -67,7 +67,7 @@ describe('body', () => {
   });
 
   it('should not process non-multipart POST request', async () => {
-    const req = new stream.PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as unknown as Req & { end: AnyFn };
 
     req.end('name=Multer');
     req.method = 'POST';
@@ -83,7 +83,7 @@ describe('body', () => {
   });
 
   it('should not process non-multipart GET request', async () => {
-    const req = new stream.PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as unknown as Req & { end: AnyFn };
 
     req.end('name=Multer');
     req.method = 'GET';

@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import fs from 'node:fs';
-import stream from 'node:stream';
+import { PassThrough } from 'node:stream';
 import { promisify } from 'node:util';
 import FormData from 'form-data';
 
@@ -108,7 +108,7 @@ function getLength(form: FormData) {
 
 export async function submitForm(multer: Middleware, form: FormData) {
   const length = await getLength(form);
-  const req = new stream.PassThrough() as unknown as Req;
+  const req = new PassThrough() as unknown as Req;
 
   req.complete = false;
   form.once('end', () => {
