@@ -24,7 +24,6 @@ function collectFields(busboy: Busboy, limits: MulterLimits) {
 
     busboy.on('field', (fieldname, value, fieldnameTruncated, valueTruncated) => {
       // Currently not implemented (https://github.com/mscdex/busboy/issues/6)
-      /* c8 ignore next */
       if (fieldnameTruncated) return reject(new MulterError('LIMIT_FIELD_KEY'));
 
       if (valueTruncated) return reject(new MulterError('LIMIT_FIELD_VALUE', fieldname));
@@ -125,7 +124,7 @@ export default async function readBody(req: Req, limits: MulterLimits, fileFilte
     busboy.removeAllListeners();
 
     // Wait for request to close, finish, or error
-    await onFinished(req).catch(/* c8 ignore next: Already handled by req.on('error', _) */ () => {});
+    await onFinished(req).catch(() => {});
 
     throw err;
   }

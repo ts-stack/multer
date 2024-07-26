@@ -13,7 +13,6 @@ export default function createFileAppender(strategy: MulterStrategy, req: Req, f
     case 'OBJECT':
       req.files = Object.create(null);
       break;
-    /* c8 ignore next */
     default:
       throw new Error(`Unknown file strategy: ${strategy}`);
   }
