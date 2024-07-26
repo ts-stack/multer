@@ -4,8 +4,6 @@ import createFileFilter from './file-filter.js';
 import createMiddleware from './middleware.js';
 import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
-const kLimits = Symbol('limits');
-
 function parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
   const input = limits![key] == null ? defaultValue : limits![key];
   const value = bytes.parse(input);
@@ -24,10 +22,10 @@ function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: 
 }
 
 export class Multer {
-  [kLimits]: MulterLimits;
+  #limits: MulterLimits;
 
   constructor(options: MulterOptions) {
-    this[kLimits] = {
+    this.#limits = {
       fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
       fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
       fields: parseLimit(options.limits || {}, 'fields', 1000),
@@ -41,7 +39,7 @@ export class Multer {
    * Accept a single file with the `name`. The single file will be stored in `req.file`.
    */
   single(name: string) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: 1 }], 'VALUE');
+    return _middleware(this.#limits, [{ name: name, maxCount: 1 }], 'VALUE');
   }
 
   /**
@@ -50,7 +48,7 @@ export class Multer {
    * `req.files`.
    */
   array(name: string, maxCount?: number) {
-    return _middleware(this[kLimits], [{ name: name, maxCount: maxCount }], 'ARRAY');
+    return _middleware(this.#limits, [{ name: name, maxCount: maxCount }], 'ARRAY');
   }
 
   /**
@@ -68,7 +66,7 @@ export class Multer {
 ```
    */
   fields(fields: MulterField[]) {
-    return _middleware(this[kLimits], fields, 'OBJECT');
+    return _middleware(this.#limits, fields, 'OBJECT');
   }
 
   /**
@@ -76,7 +74,7 @@ export class Multer {
    * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `upload.fields([])`.
    */
   none() {
-    return _middleware(this[kLimits], [], 'NONE');
+    return _middleware(this.#limits, [], 'NONE');
   }
 
   /**
@@ -91,7 +89,7 @@ export class Multer {
   any() {
     return createMiddleware(() => ({
       fields: [],
-      limits: this[kLimits],
+      limits: this.#limits,
       fileFilter: () => {},
       fileStrategy: 'ARRAY',
     }));

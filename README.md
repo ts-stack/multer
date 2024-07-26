@@ -17,7 +17,7 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 
 Basic usage example:
 
-```javascript
+```ts
 import multer from 'multer'
 import express from 'express'
 
@@ -48,7 +48,7 @@ app.post('/cool-profile', cpUpload, (req, res, next) => {
 
 In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
-```javascript
+```ts
 import multer from 'multer'
 import express from 'express'
 
@@ -107,7 +107,7 @@ will be stored in `req.files`.
 `fields` should be an array of objects with `name` and optionally a `maxCount`.
 Example:
 
-```javascript
+```ts
 [
   { name: 'avatar', maxCount: 1 },
   { name: 'gallery', maxCount: 8 }
@@ -156,7 +156,7 @@ display a nice error page using [the standard express way](http://expressjs.com/
 If you want to catch errors specifically from multer, you can call the
 middleware function by yourself.
 
-```javascript
+```ts
 const upload = multer().single('avatar')
 
 app.post('/profile', (req, res) => {
