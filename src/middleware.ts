@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 
 import appendField from 'append-field';
-import is from 'type-is';
+import { typeIs } from '@ts-stack/type-is';
 
 import { createFileAppender } from './file-appender.js';
 import { readBody } from './read-body.js';
@@ -29,7 +29,9 @@ async function handleRequest(setup: AnyFn<SetupOptions>, req: Req) {
 
 export function createMiddleware(setup: AnyFn<SetupOptions>) {
   return function multerMiddleware(req: Req, _: any, next: AnyFn) {
-    if (!is(req, ['multipart'])) return next();
+    if (!typeIs(req.headers, ['multipart'])) {
+      return next();
+    }
     handleRequest(setup, req).then(next, next);
   };
 }
