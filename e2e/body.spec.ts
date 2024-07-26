@@ -3,7 +3,6 @@ import stream from 'node:stream';
 import { promisify } from 'node:util';
 
 import FormData from 'form-data';
-import hasOwnProperty from 'has-own-property';
 // @ts-ignore
 import recursiveNullify from 'recursive-nullify';
 // @ts-ignore
@@ -79,8 +78,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null);
 
-    assert.strictEqual(hasOwnProperty(req, 'body'), false);
-    assert.strictEqual(hasOwnProperty(req, 'files'), false);
+    assert.strictEqual(req.body !== undefined, false);
+    assert.strictEqual(req.files !== undefined, false);
   });
 
   it('should not process non-multipart GET request', async () => {
@@ -95,8 +94,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null);
 
-    assert.strictEqual(hasOwnProperty(req, 'body'), false);
-    assert.strictEqual(hasOwnProperty(req, 'files'), false);
+    assert.strictEqual(req.body !== undefined, false);
+    assert.strictEqual(req.files !== undefined, false);
   });
 
   for (const test of testData) {

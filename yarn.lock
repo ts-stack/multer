@@ -1956,11 +1956,6 @@ has-flag@^4.0.0:
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-4.0.0.tgz#944771fd9c81c81265c4d6941860da06bb59479b"
   integrity sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
 
-has-own-property@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/has-own-property/-/has-own-property-2.0.0.tgz#14beb18e4302ddb510e761223b38827339d0655c"
-  integrity sha512-oupojxEPq/nfAshi0hOFDjpmYO4JXtymFyPC9YSBmFqGamZ2zUgrCkYInt5tf7f1j6iumlzJBpfLNRxZIQCM0w==
-
 has-property-descriptors@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/has-property-descriptors/-/has-property-descriptors-1.0.2.tgz#963ed7d071dc7bf5f084c5bfbe0d1b6222586854"

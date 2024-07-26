@@ -5,7 +5,6 @@ import { createWriteStream } from 'node:fs';
 
 import { Busboy } from '@fastify/busboy';
 import { temporaryFile } from 'tempy';
-import hasOwnProperty from 'has-own-property';
 import _onFinished from 'on-finished';
 import FileType from 'stream-file-type';
 
@@ -31,7 +30,7 @@ function collectFields(busboy: Busboy, limits: MulterLimits) {
       if (valueTruncated) return reject(new MulterError('LIMIT_FIELD_VALUE', fieldname));
 
       // Work around bug in Busboy (https://github.com/mscdex/busboy/issues/6)
-      if (limits && hasOwnProperty(limits, 'fieldNameSize') && fieldname.length > limits.fieldNameSize!) {
+      if (limits?.fieldNameSize !== undefined && fieldname.length > limits.fieldNameSize) {
         return reject(new MulterError('LIMIT_FIELD_KEY'));
       }
 
@@ -56,7 +55,7 @@ function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFi
       });
 
       // Work around bug in Busboy (https://github.com/mscdex/busboy/issues/6)
-      if (limits && hasOwnProperty(limits, 'fieldNameSize') && fieldname.length > limits.fieldNameSize!) {
+      if (limits?.fieldNameSize !== undefined && fieldname.length > limits.fieldNameSize) {
         return reject(new MulterError('LIMIT_FIELD_KEY'));
       }
 
