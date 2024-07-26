@@ -25,9 +25,6 @@ export class Multer {
   #limits: MulterLimits;
 
   constructor(options: MulterOptions = {}) {
-  if (options === null) throw new TypeError('Expected object for argument "options", got null');
-  if (typeof options != 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
-
     this.#limits = {
       fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
       fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),

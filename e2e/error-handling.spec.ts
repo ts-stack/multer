@@ -26,15 +26,6 @@ function hasMessage(message: string) {
 }
 
 describe('Error Handling', () => {
-  it('should throw on null', () => {
-    assert.throws(() => new Multer(null as any));
-  });
-
-  it('should throw on boolean', () => {
-    assert.throws(() => new Multer(true as any));
-    assert.throws(() => new Multer(false as any));
-  });
-
   it('should throw on invalid limits', () => {
     assert.throws(() => new Multer({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
     assert.throws(() => new Multer({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
