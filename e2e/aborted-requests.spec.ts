@@ -5,8 +5,8 @@ import { promisify } from 'node:util';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import { getMulter } from '#lib/index.js';
-import { AnyFn, Req } from '#lib/types.js';
+import { Multer } from '#lib/multer.js';
+import { AnyFn } from '#lib/types.js';
 
 function getLength(form: FormData) {
   return promisify(form.getLength).call(form);
@@ -38,7 +38,7 @@ function createAbortStream(maxBytes: number, aborter: AnyFn) {
 describe('Aborted requests', () => {
   it('should handle clients aborting the request', async () => {
     const form = new FormData();
-    const parser = getMulter().single('file');
+    const parser = new Multer().single('file');
 
     form.append('file', util.file('small'));
 
@@ -57,7 +57,7 @@ describe('Aborted requests', () => {
 
   it('should handle clients erroring the request', async () => {
     const form = new FormData();
-    const parser = getMulter().single('file');
+    const parser = new Multer().single('file');
 
     form.append('file', util.file('small'));
 

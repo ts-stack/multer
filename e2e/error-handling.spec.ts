@@ -5,12 +5,12 @@ import { promisify } from 'node:util';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import { getMulter } from '#lib/index.js';
+import { Multer } from '#lib/multer.js';
 import { AnyFn, MulterField, MulterLimits, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {
-  return getMulter({ limits: limits }).fields(fields);
+  return new Multer({ limits: limits }).fields(fields);
 }
 
 function hasCode(code: ErrorMessageCode) {
@@ -27,17 +27,17 @@ function hasMessage(message: string) {
 
 describe('Error Handling', () => {
   it('should throw on null', () => {
-    assert.throws(() => getMulter(null as any));
+    assert.throws(() => new Multer(null as any));
   });
 
   it('should throw on boolean', () => {
-    assert.throws(() => getMulter(true as any));
-    assert.throws(() => getMulter(false as any));
+    assert.throws(() => new Multer(true as any));
+    assert.throws(() => new Multer(false as any));
   });
 
   it('should throw on invalid limits', () => {
-    assert.throws(() => getMulter({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
-    assert.throws(() => getMulter({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
+    assert.throws(() => new Multer({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
+    assert.throws(() => new Multer({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
   });
 
   it('should respect file size limit', async () => {
@@ -116,7 +116,7 @@ describe('Error Handling', () => {
 
   it('should report errors from busboy constructor', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = getMulter().single('tiny');
+    const upload = new Multer().single('tiny');
     const body = 'test';
 
     req.headers = {
@@ -131,7 +131,7 @@ describe('Error Handling', () => {
 
   it('should report errors from busboy parsing', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = getMulter().single('tiny');
+    const upload = new Multer().single('tiny');
     const boundary = 'AaB03x';
     const body = [
       `--${boundary}`,

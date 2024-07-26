@@ -24,7 +24,10 @@ function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: 
 export class Multer {
   #limits: MulterLimits;
 
-  constructor(options: MulterOptions) {
+  constructor(options: MulterOptions = {}) {
+  if (options === null) throw new TypeError('Expected object for argument "options", got null');
+  if (typeof options != 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
+
     this.#limits = {
       fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
       fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
@@ -94,11 +97,4 @@ export class Multer {
       fileStrategy: 'ARRAY',
     }));
   }
-}
-
-export function getMulter(options: MulterOptions = {}) {
-  if (options === null) throw new TypeError('Expected object for argument "options", got null');
-  if (typeof options != 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
-
-  return new Multer(options);
 }

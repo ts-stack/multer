@@ -8,8 +8,8 @@ import { getStreamAsBuffer } from 'get-stream';
 import _onFinished from 'on-finished';
 
 import * as util from './_util.js';
-import { getMulter } from '#lib/index.js';
-import { AnyFn, Middleware, Req, Res } from '#lib/types.js';
+import { Multer } from '#lib/multer.js';
+import { AnyFn, Req, Res } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 
@@ -46,7 +46,7 @@ describe('Express Integration', () => {
 
   it('should work with express error handling', async () => {
     const limits = { fileSize: 200 };
-    const upload = getMulter({ limits: limits });
+    const upload = new Multer({ limits: limits });
     const router = new (express as any).Router() as Router;
     const form = new FormData();
 
@@ -78,7 +78,7 @@ describe('Express Integration', () => {
   });
 
   it('should work when uploading a file', async () => {
-    const upload = getMulter();
+    const upload = new Multer();
     const router = new (express as any).Router() as Router;
     const form = new FormData();
 

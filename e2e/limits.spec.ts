@@ -2,12 +2,12 @@ import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import { getMulter } from '#lib/index.js';
+import { Multer } from '#lib/multer.js';
 
 describe('limits', () => {
   it('should report limit errors', async () => {
     const form = new FormData();
-    const parser = getMulter({ limits: { fileSize: 100 } }).single('file');
+    const parser = new Multer({ limits: { fileSize: 100 } }).single('file');
 
     form.append('file', util.file('large'));
 

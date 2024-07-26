@@ -18,11 +18,11 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```ts
-import { getMulter } from 'multer';
+import { Multer } from 'multer';
 import express from 'express';
 
 const app = express();
-const upload = multer();
+const upload = new Multer();
 
 app.post('/profile', upload.single('avatar'), (req, res, next) => {
   // req.file is the `avatar` file
@@ -49,11 +49,11 @@ app.post('/cool-profile', cpUpload, (req, res, next) => {
 In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
 ```ts
-import { getMulter } from 'multer';
+import { Multer } from 'multer';
 import express from 'express';
 
 const app = express();
-const upload = multer();
+const upload = new Multer();
 
 app.post('/profile', upload.none(), (req, res, next) => {
   // req.body contains the text fields
@@ -157,7 +157,7 @@ If you want to catch errors specifically from multer, you can call the
 middleware function by yourself.
 
 ```ts
-const upload = multer().single('avatar');
+const upload = new Multer().single('avatar');
 
 app.post('/profile', (req, res) => {
   upload(req, res, (err) => {
