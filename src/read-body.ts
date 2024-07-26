@@ -3,7 +3,7 @@ import { pipeline as _pipeline, type Readable } from 'node:stream';
 import { promisify } from 'node:util';
 import { createWriteStream } from 'node:fs';
 
-import Busboy from '@fastify/busboy';
+import { Busboy } from '@fastify/busboy';
 import { temporaryFile } from 'tempy';
 import hasOwnProperty from 'has-own-property';
 import _onFinished from 'on-finished';
@@ -19,7 +19,7 @@ function drainStream(stream: Readable) {
   stream.on('readable', stream.read.bind(stream));
 }
 
-function collectFields(busboy: Busboy.Busboy, limits: MulterLimits) {
+function collectFields(busboy: Busboy, limits: MulterLimits) {
   return new Promise<{ key: string; value: string }[]>((resolve, reject) => {
     const result: { key: string; value: string }[] = [];
 
@@ -42,7 +42,7 @@ function collectFields(busboy: Busboy.Busboy, limits: MulterLimits) {
   });
 }
 
-function collectFiles(busboy: Busboy.Busboy, limits: MulterLimits, fileFilter: MulterFileFilter) {
+function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFileFilter) {
   return new Promise<MulterFile[]>((resolve, reject) => {
     const result: Promise<MulterFile>[] = [];
 
@@ -100,7 +100,7 @@ function collectFiles(busboy: Busboy.Busboy, limits: MulterLimits, fileFilter: M
 }
 
 export default async function readBody(req: Req, limits: MulterLimits, fileFilter: MulterFileFilter) {
-  const busboy = new Busboy.Busboy({ headers: req.headers as any, limits: limits });
+  const busboy = new Busboy({ headers: req.headers as any, limits: limits });
 
   const fields = collectFields(busboy, limits);
   const files = collectFiles(busboy, limits, fileFilter);
