@@ -18,23 +18,23 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```ts
-import multer from 'multer'
-import express from 'express'
+import multer from 'multer';
+import express from 'express';
 
-const app = express()
-const upload = multer()
+const app = express();
+const upload = multer();
 
 app.post('/profile', upload.single('avatar'), (req, res, next) => {
   // req.file is the `avatar` file
   // req.body will hold the text fields, if there were any
-})
+});
 
 app.post('/photos/upload', upload.array('photos', 12), (req, res, next) => {
   // req.files is array of `photos` files
   // req.body will contain the text fields, if there were any
-})
+});
 
-const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }])
+const cpUpload = upload.fields([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]);
 app.post('/cool-profile', cpUpload, (req, res, next) => {
   // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
@@ -43,21 +43,21 @@ app.post('/cool-profile', cpUpload, (req, res, next) => {
   //  req.files['gallery'] -> Array
   //
   // req.body will contain the text fields, if there were any
-})
+});
 ```
 
 In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
 ```ts
-import multer from 'multer'
-import express from 'express'
+import multer from 'multer';
+import express from 'express';
 
-const app = express()
-const upload = multer()
+const app = express();
+const upload = multer();
 
 app.post('/profile', upload.none(), (req, res, next) => {
   // req.body contains the text fields
-})
+});
 ```
 
 ## API
@@ -157,7 +157,7 @@ If you want to catch errors specifically from multer, you can call the
 middleware function by yourself.
 
 ```ts
-const upload = multer().single('avatar')
+const upload = multer().single('avatar');
 
 app.post('/profile', (req, res) => {
   upload(req, res, (err) => {
@@ -167,6 +167,6 @@ app.post('/profile', (req, res) => {
     }
 
     // Everything went fine
-  })
-})
+  });
+});
 ```
