@@ -13,6 +13,13 @@ export type Res = Response;
 export type AnyFn<T = any> = (...args: any[]) => T;
 export type MulterStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 
+export interface SetupOptions {
+  fields: MulterField[],
+  limits: MulterLimits,
+  fileFilter: AnyFn,
+  fileStrategy: MulterStrategy,
+}
+
 /**
  * a function to control which files should be uploaded and which should be skipped
  * pass a boolean to indicate if the file should be accepted

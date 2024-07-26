@@ -98,7 +98,7 @@ export class Multer {
 
 export default function multer(options: MulterOptions = {}) {
   if (options === null) throw new TypeError('Expected object for argument "options", got null');
-  if (typeof options !== 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
+  if (typeof options != 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
 
   return new Multer(options);
 }
