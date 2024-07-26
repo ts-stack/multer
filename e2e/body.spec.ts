@@ -9,14 +9,14 @@ import recursiveNullify from 'recursive-nullify';
 import testData from 'testdata-w3c-json-form';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { AnyFn, Middleware, Req } from '#lib/types.js';
 
 describe('body', () => {
   let parser: Middleware;
 
   beforeAll(() => {
-    parser = multer().none();
+    parser = getMulter().none();
   });
 
   it('should process multiple fields', async () => {

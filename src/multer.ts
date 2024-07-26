@@ -1,7 +1,7 @@
 import bytes from 'bytes';
 
-import createFileFilter from './file-filter.js';
-import createMiddleware from './middleware.js';
+import { createFileFilter } from './file-filter.js';
+import { createMiddleware } from './middleware.js';
 import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
 function parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
@@ -80,7 +80,7 @@ export class Multer {
   /**
    * Accepts all files that comes over the wire. An array of files will be stored in
    * `req.files`.
-   * 
+   *
    * **WARNING:** Make sure that you always handle the files that a user uploads.
    * Never add multer as a global middleware since a malicious user could upload
    * files to a route that you didn't anticipate. Only use this function on routes
@@ -96,7 +96,7 @@ export class Multer {
   }
 }
 
-export default function multer(options: MulterOptions = {}) {
+export function getMulter(options: MulterOptions = {}) {
   if (options === null) throw new TypeError('Expected object for argument "options", got null');
   if (typeof options != 'object') throw new TypeError(`Expected object for argument "options", got ${typeof options}`);
 

@@ -2,19 +2,19 @@ import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { Middleware } from '#lib/types.js';
 
 describe('upload.none', () => {
   let parser: Middleware;
 
   beforeAll(() => {
-    parser = multer().none();
+    parser = getMulter().none();
   });
 
   it('should handle text fields', async () => {
     const form = new FormData();
-    const parser = multer().none();
+    const parser = getMulter().none();
 
     form.append('foo', 'bar');
     form.append('test', 'yes');

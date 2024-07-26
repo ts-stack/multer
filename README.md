@@ -18,7 +18,7 @@ Multer adds a `body` object and a `file` or `files` object to the `request` obje
 Basic usage example:
 
 ```ts
-import multer from 'multer';
+import { getMulter } from 'multer';
 import express from 'express';
 
 const app = express();
@@ -49,7 +49,7 @@ app.post('/cool-profile', cpUpload, (req, res, next) => {
 In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
 
 ```ts
-import multer from 'multer';
+import { getMulter } from 'multer';
 import express from 'express';
 
 const app = express();

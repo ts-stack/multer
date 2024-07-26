@@ -3,8 +3,8 @@ import fs from 'node:fs';
 import appendField from 'append-field';
 import is from 'type-is';
 
-import createFileAppender from './file-appender.js';
-import readBody from './read-body.js';
+import { createFileAppender } from './file-appender.js';
+import { readBody } from './read-body.js';
 import { AnyFn, SetupOptions, Req } from './types.js';
 
 async function handleRequest(setup: AnyFn<SetupOptions>, req: Req) {
@@ -27,7 +27,7 @@ async function handleRequest(setup: AnyFn<SetupOptions>, req: Req) {
   }
 }
 
-export default function createMiddleware(setup: AnyFn<SetupOptions>) {
+export function createMiddleware(setup: AnyFn<SetupOptions>) {
   return function multerMiddleware(req: Req, _: any, next: AnyFn) {
     if (!is(req, ['multipart'])) return next();
     handleRequest(setup, req).then(next, next);

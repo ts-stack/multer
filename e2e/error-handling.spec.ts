@@ -5,12 +5,12 @@ import { promisify } from 'node:util';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { AnyFn, MulterField, MulterLimits, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {
-  return multer({ limits: limits }).fields(fields);
+  return getMulter({ limits: limits }).fields(fields);
 }
 
 function hasCode(code: ErrorMessageCode) {
@@ -27,17 +27,17 @@ function hasMessage(message: string) {
 
 describe('Error Handling', () => {
   it('should throw on null', () => {
-    assert.throws(() => multer(null as any));
+    assert.throws(() => getMulter(null as any));
   });
 
   it('should throw on boolean', () => {
-    assert.throws(() => multer(true as any));
-    assert.throws(() => multer(false as any));
+    assert.throws(() => getMulter(true as any));
+    assert.throws(() => getMulter(false as any));
   });
 
   it('should throw on invalid limits', () => {
-    assert.throws(() => multer({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
-    assert.throws(() => multer({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
+    assert.throws(() => getMulter({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
+    assert.throws(() => getMulter({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
   });
 
   it('should respect file size limit', async () => {
@@ -116,7 +116,7 @@ describe('Error Handling', () => {
 
   it('should report errors from busboy constructor', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = multer().single('tiny');
+    const upload = getMulter().single('tiny');
     const body = 'test';
 
     req.headers = {
@@ -131,7 +131,7 @@ describe('Error Handling', () => {
 
   it('should report errors from busboy parsing', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = multer().single('tiny');
+    const upload = getMulter().single('tiny');
     const boundary = 'AaB03x';
     const body = [
       `--${boundary}`,

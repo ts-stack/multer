@@ -2,14 +2,14 @@ import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { Middleware, MulterFile } from '#lib/types.js';
 
 describe('upload.array', () => {
   let parser: Middleware;
 
   beforeAll(() => {
-    parser = multer().array('files', 3);
+    parser = getMulter().array('files', 3);
   });
 
   it('should accept single file', async () => {

@@ -1,7 +1,7 @@
 import { MulterError } from './error.js';
 import { MulterField, MulterFile } from './types.js';
 
-export default function createFileFilter(fields: MulterField[]) {
+export function createFileFilter(fields: MulterField[]) {
   const filesLeft = new Map();
 
   for (const field of fields) {

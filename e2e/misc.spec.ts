@@ -3,13 +3,13 @@ import { PassThrough, pipeline } from 'node:stream';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { MulterFile } from '#lib/types.js';
 
 describe('Misc', () => {
   it('should handle unicode filenames', async () => {
     const form = new FormData();
-    const parser = multer().single('file');
+    const parser = getMulter().single('file');
     const filename = '\ud83d\udca9.dat';
 
     form.append('file', util.file('small'), { filename });
@@ -23,7 +23,7 @@ describe('Misc', () => {
 
   it('should handle absent filenames', async () => {
     const form = new FormData();
-    const parser = multer().single('file');
+    const parser = getMulter().single('file');
     const stream = util.file('small');
 
     // Don't let FormData figure out a filename
@@ -39,7 +39,7 @@ describe('Misc', () => {
   });
 
   it('should present files in same order as they came', async () => {
-    const parser = multer().array('themFiles', 2);
+    const parser = getMulter().array('themFiles', 2);
     const form = new FormData();
 
     form.append('themFiles', util.file('small'));
@@ -56,7 +56,7 @@ describe('Misc', () => {
   });
 
   it('should accept multiple requests', async () => {
-    const parser = multer().array('them-files');
+    const parser = getMulter().array('them-files');
 
     async function submitData(fileCount: number) {
       const form = new FormData();

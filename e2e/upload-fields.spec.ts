@@ -2,14 +2,14 @@ import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
-import multer from '#lib/index.js';
+import { getMulter } from '#lib/index.js';
 import { MulterFilesInObject, Middleware } from '#lib/types.js';
 
 describe('upload.fields', () => {
   let parser: Middleware;
 
   beforeAll(() => {
-    parser = multer().fields([
+    parser = getMulter().fields([
       { name: 'CA$|-|', maxCount: 1 },
       { name: 'set-1', maxCount: 3 },
       { name: 'set-2', maxCount: 3 },

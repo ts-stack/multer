@@ -97,7 +97,7 @@ function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFi
   });
 }
 
-export default async function readBody(req: Req, limits: MulterLimits, fileFilter: MulterFileFilter) {
+export async function readBody(req: Req, limits: MulterLimits, fileFilter: MulterFileFilter) {
   const busboy = new Busboy({ headers: req.headers as any, limits: limits });
 
   const fields = collectFields(busboy, limits);

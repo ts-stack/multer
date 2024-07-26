@@ -1,6 +1,6 @@
 import { MulterFilesInObject, MulterStrategy, MulterField, MulterFile, Req } from './types.js';
 
-export default function createFileAppender(strategy: MulterStrategy, req: Req, fields: MulterField[]) {
+export function createFileAppender(strategy: MulterStrategy, req: Req, fields: MulterField[]) {
   switch (strategy) {
     case 'NONE':
       break;
