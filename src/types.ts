@@ -26,6 +26,9 @@ export interface MulterFileFilter {
  * An object specifying the size limits of the optional properties.
  * Multer passes this object into busboy directly, and the details of the properties
  * can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
+ * 
+ * Bytes limits can be passed either as a `number`, or as a `string` with an appropriate prefix.
+ * Specifying the limits can help protect your site against denial of service (DoS) attacks.
  */
 export interface MulterLimits {
   /**
