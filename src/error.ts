@@ -17,7 +17,7 @@ export type ErrorMessageCode =
   | 'LIMIT_FIELD_COUNT'
   | 'LIMIT_UNEXPECTED_FILE';
 
-export default class MulterError extends Error {
+export class MulterError extends Error {
   code: ErrorMessageCode;
   field: string;
 

@@ -8,7 +8,7 @@ import { temporaryFile } from 'tempy';
 import _onFinished from 'on-finished';
 import FileType from 'stream-file-type';
 
-import MulterError from './error.js';
+import { MulterError } from './error.js';
 import { MulterFile, MulterFileFilter, MulterLimits, Req } from './types.js';
 
 const onFinished = promisify(_onFinished);

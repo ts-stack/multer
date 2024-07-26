@@ -1,11 +1,11 @@
-import MulterError from './error.js';
+import { MulterError } from './error.js';
 import { MulterField, MulterFile } from './types.js';
 
 export default function createFileFilter(fields: MulterField[]) {
   const filesLeft = new Map();
 
   for (const field of fields) {
-    if (typeof field.maxCount === 'number') {
+    if (typeof field.maxCount == 'number') {
       filesLeft.set(field.name, field.maxCount);
     } else {
       filesLeft.set(field.name, Infinity);
