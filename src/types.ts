@@ -26,33 +26,33 @@ export interface MulterFileFilter {
  * An object specifying the size limits of the optional properties.
  * Multer passes this object into busboy directly, and the details of the properties
  * can be found on [busboy's page](https://github.com/mscdex/busboy#busboy-methods).
- * 
+ *
  * Bytes limits can be passed either as a `number`, or as a `string` with an appropriate prefix.
  * Specifying the limits can help protect your site against denial of service (DoS) attacks.
  */
 export interface MulterLimits {
   /**
-   * Maximum size of each form field name in bytes. (Default: 100).
+   * Max number of bytes per field name. (Default `'100B'`)
    */
   fieldNameSize?: number;
   /**
-   * Maximum size of each form field value in bytes. (Default: 1048576).
+   * Max number of bytes per field value. (Default `'8KB'`)
    */
   fieldSize?: number;
   /**
-   * Maximum number of non-file form fields. (Default: Infinity).
+   * Max number of fields per request. (Default `1000`)
    */
   fields?: number;
   /**
-   * Maximum size of each file in bytes. (Default: Infinity).
+   * Max number of bytes per file. (Default `'8MB'`)
    */
   fileSize?: number;
   /**
-   * Maximum number of file fields. (Default: Infinity).
+   * Max number of files per request. (Default `10`)
    */
   files?: number;
   /**
-   * Maximum number of headers. (Default: 2000).
+   * Max number of header key-value pairs. (Default `2000`, ssame as Node's http)
    */
   headerPairs?: number;
 }

@@ -12,7 +12,7 @@ describe('Misc', () => {
     const parser = multer().single('file');
     const filename = '\ud83d\udca9.dat';
 
-    form.append('file', util.file('small'), { filename: filename });
+    form.append('file', util.file('small'), { filename });
 
     const req = await util.submitForm(parser, form);
     assert.strictEqual(req.file!.originalName, filename);
