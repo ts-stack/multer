@@ -2,16 +2,16 @@ import { Readable } from 'node:stream';
 import type { Request, Response } from 'express';
 
 export type Middleware = (req: Req, res: any, next: AnyFn) => void;
-export interface FilesInObject {
+export interface MulterFilesInObject {
   [key: string]: MulterFile[];
 }
 export interface Req extends Request {
-  files?: MulterFile[] | FilesInObject;
+  files?: MulterFile[] | MulterFilesInObject;
   file?: MulterFile | null;
 }
 export type Res = Response;
 export type AnyFn<T = any> = (...args: any[]) => T;
-export type FileStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
+export type MulterStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 
 /**
  * a function to control which files should be uploaded and which should be skipped

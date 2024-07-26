@@ -1,6 +1,6 @@
-import { FilesInObject, FileStrategy, MulterField, MulterFile, Req } from './types.js';
+import { MulterFilesInObject, MulterStrategy, MulterField, MulterFile, Req } from './types.js';
 
-export default function createFileAppender(strategy: FileStrategy, req: Req, fields: MulterField[]) {
+export default function createFileAppender(strategy: MulterStrategy, req: Req, fields: MulterField[]) {
   switch (strategy) {
     case 'NONE':
       break;
@@ -20,7 +20,7 @@ export default function createFileAppender(strategy: FileStrategy, req: Req, fie
 
   if (strategy === 'OBJECT') {
     for (const field of fields) {
-      (req.files as FilesInObject)[field.name] = [];
+      (req.files as MulterFilesInObject)[field.name] = [];
     }
   }
 
@@ -33,7 +33,7 @@ export default function createFileAppender(strategy: FileStrategy, req: Req, fie
         (req.files as MulterFile[]).push(file);
         break;
       case 'OBJECT':
-        (req.files as FilesInObject)[file.fieldName].push(file);
+        (req.files as MulterFilesInObject)[file.fieldName].push(file);
         break;
     }
   };

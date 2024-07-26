@@ -2,7 +2,7 @@ import bytes from 'bytes';
 
 import createFileFilter from './file-filter.js';
 import createMiddleware from './middleware.js';
-import { FileStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
+import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
 const kLimits = Symbol('limits');
 
@@ -14,7 +14,7 @@ function parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue:
   return value;
 }
 
-function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: FileStrategy) {
+function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: MulterStrategy) {
   return createMiddleware(() => ({
     fields,
     limits,
@@ -23,7 +23,7 @@ function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: 
   }));
 }
 
-class Multer {
+export class Multer {
   [kLimits]: MulterLimits;
 
   constructor(options: MulterOptions) {

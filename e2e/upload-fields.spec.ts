@@ -3,7 +3,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import multer from '#lib/index.js';
-import { FilesInObject, Middleware } from '#lib/types.js';
+import { MulterFilesInObject, Middleware } from '#lib/types.js';
 
 describe('upload.fields', () => {
   let parser: Middleware;
@@ -22,7 +22,7 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('tiny'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as FilesInObject;
+    const filesInObject = req.files as MulterFilesInObject;
     assert.strictEqual(filesInObject['CA$|-|'].length, 0);
     assert.strictEqual(filesInObject['set-1'].length, 0);
     assert.strictEqual(filesInObject['set-2'].length, 1);
@@ -39,7 +39,7 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('tiny'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as FilesInObject;
+    const filesInObject = req.files as MulterFilesInObject;
     assert.strictEqual(filesInObject['CA$|-|'].length, 1);
     assert.strictEqual(filesInObject['set-1'].length, 2);
     assert.strictEqual(filesInObject['set-2'].length, 1);
@@ -64,7 +64,7 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('empty'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as FilesInObject;
+    const filesInObject = req.files as MulterFilesInObject;
     assert.strictEqual(filesInObject['CA$|-|'].length, 1);
     assert.strictEqual(filesInObject['set-1'].length, 3);
     assert.strictEqual(filesInObject['set-2'].length, 3);
