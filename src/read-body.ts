@@ -2,7 +2,6 @@ import { extname } from 'node:path';
 import { pipeline as _pipeline, type Readable } from 'node:stream';
 import { promisify } from 'node:util';
 import { createWriteStream } from 'node:fs';
-
 import { Busboy } from '@fastify/busboy';
 import { temporaryFile } from 'tempy';
 import _onFinished from 'on-finished';
@@ -33,7 +32,7 @@ function collectFields(busboy: Busboy, limits: MulterLimits) {
         return reject(new MulterError('LIMIT_FIELD_KEY'));
       }
 
-      result.push({ key: fieldname, value: value });
+      result.push({ key: fieldname, value });
     });
 
     busboy.on('finish', () => resolve(result));
@@ -100,9 +99,9 @@ function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFi
 export async function readBody(req: Req, limits: MulterLimits, fileFilter: MulterFileFilter) {
   const busboy = new Busboy({ headers: req.headers as any, limits: limits });
 
-  const fields = collectFields(busboy, limits);
-  const files = collectFiles(busboy, limits, fileFilter);
-  const guard = new Promise((resolve, reject) => {
+  const promiseFields = collectFields(busboy, limits);
+  const promiseFiles = collectFiles(busboy, limits, fileFilter);
+  const promiseGuard = new Promise((resolve, reject) => {
     req.on('error', (err) => reject(err));
     busboy.on('error', (err) => reject(err));
 
@@ -116,8 +115,8 @@ export async function readBody(req: Req, limits: MulterLimits, fileFilter: Multe
   req.pipe(busboy);
 
   try {
-    const result = await Promise.all([fields, files, guard]);
-    return { fields: result[0], files: result[1] };
+    const [fields, files] = await Promise.all([promiseFields, promiseFiles, promiseGuard]);
+    return { fields, files };
   } catch (err) {
     req.unpipe(busboy);
     drainStream(req);
