@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
@@ -55,10 +54,8 @@ describe('upload.array', () => {
     form.append('files', util.file('small'));
     form.append('files', util.file('small'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'files',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_FILE_COUNT', field: 'files' });
   });
 
   it('should reject unexpected field', async () => {
@@ -67,9 +64,7 @@ describe('upload.array', () => {
     form.append('name', 'Multer');
     form.append('unexpected', util.file('small'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'unexpected' });
   });
 });
