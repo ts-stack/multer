@@ -1,6 +1,6 @@
 import bytes from 'bytes';
 
-import { createLimitGuard } from './file-filter.js';
+import { createLimitGuard } from './limit-guard.js';
 import { createMiddleware } from './middleware.js';
 import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 

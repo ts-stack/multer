@@ -33,10 +33,8 @@ describe('upload.none', () => {
     form.append('name', 'Multer');
     form.append('file', util.file('small'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'file',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'file' });
   });
 
   it('should reject multiple files', async () => {
@@ -46,9 +44,7 @@ describe('upload.none', () => {
     form.append('file', util.file('tiny'));
     form.append('file', util.file('tiny'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'file',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'file' });
   });
 });
