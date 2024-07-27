@@ -20,8 +20,8 @@ describe('upload.array', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(req.body.name, 'Multer');
-    assert.strictEqual(files.length, 1);
+    expect(req.body.name).toBe('Multer');
+    expect(files.length).toBe(1);
 
     await util.assertFile(files[0], 'files', 'small');
   });
@@ -36,8 +36,8 @@ describe('upload.array', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(req.body.name, 'Multer');
-    assert.strictEqual(files.length, 3);
+    expect(req.body.name).toBe('Multer');
+    expect(files.length).toBe(3);
 
     await util.assertFiles([
       [files[0], 'files', 'empty'],

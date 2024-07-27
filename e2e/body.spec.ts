@@ -78,8 +78,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null);
 
-    assert.strictEqual(req.body !== undefined, false);
-    assert.strictEqual(req.files !== undefined, false);
+    expect(req.body !== undefined).toBe(false);
+    expect(req.files !== undefined).toBe(false);
   });
 
   it('should not process non-multipart GET request', async () => {
@@ -94,8 +94,8 @@ describe('body', () => {
 
     await promisify(parser)(req, null);
 
-    assert.strictEqual(req.body !== undefined, false);
-    assert.strictEqual(req.files !== undefined, false);
+    expect(req.body !== undefined).toBe(false);
+    expect(req.files !== undefined).toBe(false);
   });
 
   for (const test of testData) {

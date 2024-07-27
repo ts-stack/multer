@@ -23,9 +23,9 @@ describe('upload.fields', () => {
 
     const req = await util.submitForm(parser, form);
     const filesInObject = req.files as MulterFilesInObject;
-    assert.strictEqual(filesInObject['CA$|-|'].length, 0);
-    assert.strictEqual(filesInObject['set-1'].length, 0);
-    assert.strictEqual(filesInObject['set-2'].length, 1);
+    expect(filesInObject['CA$|-|'].length).toBe(0);
+    expect(filesInObject['set-1'].length).toBe(0);
+    expect(filesInObject['set-2'].length).toBe(1);
 
     await util.assertFile(filesInObject['set-2'][0], 'set-2', 'tiny');
   });
@@ -40,9 +40,9 @@ describe('upload.fields', () => {
 
     const req = await util.submitForm(parser, form);
     const filesInObject = req.files as MulterFilesInObject;
-    assert.strictEqual(filesInObject['CA$|-|'].length, 1);
-    assert.strictEqual(filesInObject['set-1'].length, 2);
-    assert.strictEqual(filesInObject['set-2'].length, 1);
+    expect(filesInObject['CA$|-|'].length).toBe(1);
+    expect(filesInObject['set-1'].length).toBe(2);
+    expect(filesInObject['set-2'].length).toBe(1);
 
     await util.assertFiles([
       [filesInObject['CA$|-|'][0], 'CA$|-|', 'empty'],
@@ -65,9 +65,9 @@ describe('upload.fields', () => {
 
     const req = await util.submitForm(parser, form);
     const filesInObject = req.files as MulterFilesInObject;
-    assert.strictEqual(filesInObject['CA$|-|'].length, 1);
-    assert.strictEqual(filesInObject['set-1'].length, 3);
-    assert.strictEqual(filesInObject['set-2'].length, 3);
+    expect(filesInObject['CA$|-|'].length).toBe(1);
+    expect(filesInObject['set-1'].length).toBe(3);
+    expect(filesInObject['set-2'].length).toBe(3);
 
     await util.assertFiles([
       [filesInObject['CA$|-|'][0], 'CA$|-|', 'empty'],

@@ -1,5 +1,4 @@
 import { Server } from 'node:http';
-import assert from 'node:assert';
 import { promisify } from 'node:util';
 
 import express, { Router, Application } from 'express';
@@ -61,7 +60,7 @@ describe('Express Integration', () => {
     });
 
     router.use((err: any, req: Req, res: Res, next: AnyFn) => {
-      assert.strictEqual(err.code, 'LIMIT_FILE_SIZE');
+      expect(err.code).toBe('LIMIT_FILE_SIZE');
 
       errorCalled++;
       res.status(500).end('ERROR');
@@ -71,10 +70,10 @@ describe('Express Integration', () => {
 
     const result = await submitForm(form, '/t1/profile');
 
-    assert.strictEqual(routeCalled, 0);
-    assert.strictEqual(errorCalled, 1);
-    assert.strictEqual(result.body.toString(), 'ERROR');
-    assert.strictEqual(result.res.statusCode, 500);
+    expect(routeCalled).toBe(0);
+    expect(errorCalled).toBe(1);
+    expect(result.body.toString()).toBe('ERROR');
+    expect(result.res.statusCode).toBe(500);
   });
 
   it('should work when uploading a file', async () => {
@@ -101,9 +100,9 @@ describe('Express Integration', () => {
 
     const result = await submitForm(form, '/t2/profile');
 
-    assert.strictEqual(routeCalled, 1);
-    assert.strictEqual(errorCalled, 0);
-    assert.strictEqual(result.body.toString(), 'SUCCESS');
-    assert.strictEqual(result.res.statusCode, 200);
+    expect(routeCalled).toBe(1);
+    expect(errorCalled).toBe(0);
+    expect(result.body.toString()).toBe('SUCCESS');
+    expect(result.res.statusCode).toBe(200);
   });
 });

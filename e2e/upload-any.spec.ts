@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
@@ -19,7 +18,7 @@ describe('upload.any', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(files.length, 1);
+    expect(files.length).toBe(1);
 
     await util.assertFile(files[0], 'test', 'tiny');
   });
@@ -34,7 +33,7 @@ describe('upload.any', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(files.length, 4);
+    expect(files.length).toBe(4);
 
     await util.assertFiles([
       [files[0], 'foo', 'empty'],
@@ -57,7 +56,7 @@ describe('upload.any', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(files.length, 7);
+    expect(files.length).toBe(7);
 
     await util.assertFiles([
       [files[0], 'set-0', 'empty'],

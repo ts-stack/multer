@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
@@ -20,11 +19,11 @@ describe('upload.none', () => {
     form.append('test', 'yes');
 
     const req = await util.submitForm(parser, form);
-    assert.strictEqual(req.file, undefined);
-    assert.strictEqual(req.files, undefined);
+    expect(req.file).toBe(undefined);
+    expect(req.files).toBe(undefined);
 
-    assert.strictEqual(req.body.foo, 'bar');
-    assert.strictEqual(req.body.test, 'yes');
+    expect(req.body.foo).toBe('bar');
+    expect(req.body.test).toBe('yes');
   });
 
   it('should reject single file', async () => {

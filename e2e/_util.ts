@@ -85,19 +85,19 @@ export async function assertFile(file: MulterFile, fieldName: string, fileName: 
 
   const expected = files.get(fileName)!;
 
-  assert.strictEqual(file.fieldName, fieldName);
-  assert.strictEqual(file.originalName, fileName + expected.extension);
-  assert.strictEqual(file.size, expected.size);
+  expect(file.fieldName).toBe(fieldName);
+  expect(file.originalName).toBe(fileName + expected.extension);
+  expect(file.size).toBe(expected.size);
 
-  assert.strictEqual(file.clientReportedMimeType, expected.clientReportedMimeType);
-  assert.strictEqual(file.clientReportedFileExtension, expected.extension);
+  expect(file.clientReportedMimeType).toBe(expected.clientReportedMimeType);
+  expect(file.clientReportedFileExtension).toBe(expected.extension);
 
-  assert.strictEqual(file.detectedMimeType, expected.detectedMimeType);
-  assert.strictEqual(file.detectedFileExtension, expected.detectedFileExtension);
+  expect(file.detectedMimeType).toBe(expected.detectedMimeType);
+  expect(file.detectedFileExtension).toBe(expected.detectedFileExtension);
 
   const hash = await hasha.fromStream(file.stream, { algorithm: 'md5' });
 
-  assert.strictEqual(hash, expected.hash);
+  expect(hash).toBe(expected.hash);
 }
 
 export async function assertFiles(files: [MulterFile, string, FileSize][]) {

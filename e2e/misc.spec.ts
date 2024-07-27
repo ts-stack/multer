@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import { PassThrough, pipeline } from 'node:stream';
 import FormData from 'form-data';
 
@@ -15,7 +14,7 @@ describe('Misc', () => {
     form.append('file', util.file('small'), { filename });
 
     const req = await util.submitForm(parser, form);
-    assert.strictEqual(req.file!.originalName, filename);
+    expect(req.file!.originalName).toBe(filename);
 
     // Ignore content
     req.file!.stream.resume();
@@ -32,7 +31,7 @@ describe('Misc', () => {
     form.append('file', hidden, { knownLength: util.knownFileLength('small') });
 
     const req = await util.submitForm(parser, form);
-    assert.strictEqual(req.file!.originalName, undefined);
+    expect(req.file!.originalName).toBe(undefined);
 
     // Ignore content
     req.file!.stream.resume();
@@ -47,7 +46,7 @@ describe('Misc', () => {
 
     const req = await util.submitForm(parser, form);
     const files = req.files as MulterFile[];
-    assert.strictEqual(files.length, 2);
+    expect(files.length).toBe(2);
 
     util.assertFiles([
       [files[0], 'themFiles', 'small'],
@@ -67,7 +66,7 @@ describe('Misc', () => {
 
       const req = await util.submitForm(parser, form);
       const files = req.files as MulterFile[];
-      assert.strictEqual(files.length, fileCount);
+      expect(files.length).toBe(fileCount);
 
       await util.assertFiles(files.map((file: MulterFile) => [file, 'them-files', 'small']));
     }
