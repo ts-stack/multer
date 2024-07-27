@@ -22,7 +22,7 @@ export class Multer {
    * Accept a single file with the `name`. The single file will be stored in `req.file`.
    */
   single(name: string) {
-    return this.middleware(this.#limits, [{ name: name, maxCount: 1 }], 'VALUE');
+    return this.middleware(this.#limits, [{ name, maxCount: 1 }], 'VALUE');
   }
 
   /**
@@ -31,7 +31,7 @@ export class Multer {
    * `req.files`.
    */
   array(name: string, maxCount?: number) {
-    return this.middleware(this.#limits, [{ name: name, maxCount: maxCount }], 'ARRAY');
+    return this.middleware(this.#limits, [{ name, maxCount }], 'ARRAY');
   }
 
   /**
@@ -97,9 +97,9 @@ export class Multer {
   }
 
   protected parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
-    const input = limits![key] == null ? defaultValue : limits![key];
+    const input = limits[key] == null ? defaultValue : limits[key];
     const value = bytes.parse(input);
-    if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits![key]}`);
+    if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`);
     if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`);
     return value;
   }
