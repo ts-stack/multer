@@ -10,7 +10,9 @@ import { Middleware, MulterFile, Req } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 
-const files = new Map<string, Partial<MulterFile>>([
+type FileSize = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
+
+const files = new Map<FileSize, Partial<MulterFile>>([
   [
     'empty',
     {
@@ -68,15 +70,15 @@ const files = new Map<string, Partial<MulterFile>>([
   ],
 ]);
 
-export function file(name: string) {
+export function file(name: FileSize) {
   return fs.createReadStream(new URL(`../e2e/files/${name}${files.get(name)!.extension}`, import.meta.url));
 }
 
-export function knownFileLength(name: string) {
+export function knownFileLength(name: FileSize) {
   return files.get(name)!.size;
 }
 
-export async function assertFile(file: MulterFile, fieldName: string, fileName: string) {
+export async function assertFile(file: MulterFile, fieldName: string, fileName: FileSize) {
   if (!files.has(fileName)) {
     throw new Error(`No file named "${fileName}"`);
   }
@@ -98,7 +100,7 @@ export async function assertFile(file: MulterFile, fieldName: string, fileName: 
   assert.strictEqual(hash, expected.hash);
 }
 
-export async function assertFiles(files: [MulterFile, string, string][]) {
+export async function assertFiles(files: [MulterFile, string, FileSize][]) {
   await Promise.all(files.map((args) => assertFile(args[0], args[1], args[2])));
 }
 
