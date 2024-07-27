@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-
+import { IncomingHttpHeaders } from 'node:http';
 import appendField from 'append-field';
 import { typeIs } from '@ts-stack/type-is';
 
@@ -9,7 +9,7 @@ import { AnyFn, SetupOptions, Req } from './types.js';
 
 async function handleRequest(setup: AnyFn<SetupOptions>, req: Req) {
   const options = setup() as SetupOptions;
-  const result = await readBody(req, options.limits, options.fileFilter);
+  const result = await readBody(req, options.limits, options.limitGuard);
 
   req.body = Object.create(null);
 
@@ -29,9 +29,10 @@ async function handleRequest(setup: AnyFn<SetupOptions>, req: Req) {
 
 export function createMiddleware(setup: AnyFn<SetupOptions>) {
   return function multerMiddleware(req: Req, _: any, next: AnyFn) {
-    if (!typeIs(req.headers, ['multipart'])) {
-      return next();
+    if (typeIs(req.headers, ['multipart'])) {
+      handleRequest(setup, req).then(next, next);
+      return;
     }
-    handleRequest(setup, req).then(next, next);
+    return next();
   };
 }
