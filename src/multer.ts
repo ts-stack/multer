@@ -8,14 +8,7 @@ export class Multer {
   #limits: NormalizedLimits;
 
   constructor(options: MulterOptions = {}) {
-    this.#limits = {
-      fieldNameSize: this.parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
-      fieldSize: this.parseLimit(options.limits || {}, 'fieldSize', '8KB'),
-      fields: this.parseLimit(options.limits || {}, 'fields', 1000),
-      fileSize: this.parseLimit(options.limits || {}, 'fileSize', '8MB'),
-      files: this.parseLimit(options.limits || {}, 'files', 10),
-      headerPairs: this.parseLimit(options.limits || {}, 'headerPairs', 2000),
-    } as NormalizedLimits;
+    this.normalizeLimits(options);
   }
 
   /**
@@ -73,6 +66,26 @@ export class Multer {
     return this.middleware(this.#limits, [], 'ARRAY', true);
   }
 
+  protected normalizeLimits(options: MulterOptions) {
+    const limits = options.limits || {};
+    this.#limits = {
+      fieldNameSize: this.parseLimit(limits, 'fieldNameSize', '100B'),
+      fieldSize: this.parseLimit(limits, 'fieldSize', '8KB'),
+      fields: this.parseLimit(limits, 'fields', 1000),
+      fileSize: this.parseLimit(limits, 'fileSize', '8MB'),
+      files: this.parseLimit(limits, 'files', 10),
+      headerPairs: this.parseLimit(limits, 'headerPairs', 2000),
+    } as NormalizedLimits;
+  }
+
+  protected parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
+    const input = limits[key] ?? defaultValue;
+    const value = bytes.parse(input);
+    if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`);
+    if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`);
+    return value;
+  }
+
   protected middleware(
     limits: NormalizedLimits,
     fields: MulterField[],
@@ -94,13 +107,5 @@ export class Multer {
         fileStrategy,
       }));
     }
-  }
-
-  protected parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
-    const input = limits[key] == null ? defaultValue : limits[key];
-    const value = bytes.parse(input);
-    if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits[key]}`);
-    if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`);
-    return value;
   }
 }
