@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
@@ -19,7 +18,7 @@ describe('upload.single', () => {
     form.append('file', util.file('small'));
 
     const req = await util.submitForm(parser, form);
-    assert.strictEqual(req.body.name, 'Multer');
+    expect(req.body.name).toBe('Multer');
 
     await util.assertFile(req.file!, 'file', 'small');
   });
@@ -31,10 +30,8 @@ describe('upload.single', () => {
     form.append('file', util.file('tiny'));
     form.append('file', util.file('tiny'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'file',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_FILE_COUNT', field: 'file' });
   });
 
   it('should reject unexpected field', async () => {
@@ -43,9 +40,7 @@ describe('upload.single', () => {
     form.append('name', 'Multer');
     form.append('unexpected', util.file('tiny'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected',
-    );
+    const promise = util.submitForm(parser, form);
+    await expect(promise).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'unexpected' });
   });
 });
