@@ -49,7 +49,7 @@ export interface MulterLimits {
   /**
    * Max number of fields per request. (Default `1000`)
    */
-  fields?: number | string;
+  fields?: number;
   /**
    * Max number of bytes per file. (Default `'8MB'`)
    */
@@ -57,20 +57,17 @@ export interface MulterLimits {
   /**
    * Max number of files per request. (Default `10`)
    */
-  files?: number | string;
+  files?: number;
   /**
    * Max number of header key-value pairs. (Default `2000`, ssame as Node's http)
    */
-  headerPairs?: number | string;
+  headerPairs?: number;
 }
 
 export interface NormalizedLimits extends MulterLimits {
   fieldNameSize?: number;
   fieldSize?: number;
-  fields?: number;
   fileSize?: number;
-  files?: number;
-  headerPairs?: number;
 }
 
 /**
