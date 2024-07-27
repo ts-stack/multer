@@ -1,7 +1,7 @@
 import { MulterError } from './error.js';
 import { MulterField, MulterFile } from './types.js';
 
-export function createFileFilter(fields: MulterField[]) {
+export function createLimitGuard(fields: MulterField[]) {
   const filesLeft = new Map();
 
   for (const field of fields) {
@@ -12,7 +12,7 @@ export function createFileFilter(fields: MulterField[]) {
     }
   }
 
-  return function fileFilter(file: MulterFile) {
+  return function limitGuard(file: MulterFile) {
     if (!filesLeft.has(file.fieldName)) {
       throw new MulterError('LIMIT_UNEXPECTED_FILE', file.fieldName);
     }

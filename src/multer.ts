@@ -1,6 +1,6 @@
 import bytes from 'bytes';
 
-import { createFileFilter } from './file-filter.js';
+import { createLimitGuard } from './file-filter.js';
 import { createMiddleware } from './middleware.js';
 import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
@@ -77,20 +77,20 @@ export class Multer {
     limits: MulterLimits,
     fields: MulterField[],
     fileStrategy: MulterStrategy,
-    withoutFilter?: boolean,
+    withoutGuard?: boolean,
   ) {
-    if (withoutFilter) {
+    if (withoutGuard) {
       return createMiddleware(() => ({
         fields,
         limits,
-        fileFilter: () => {},
+        limitGuard: () => {},
         fileStrategy,
       }));
     } else {
       return createMiddleware(() => ({
         fields,
         limits,
-        fileFilter: createFileFilter(fields),
+        limitGuard: createLimitGuard(fields),
         fileStrategy,
       }));
     }

@@ -16,7 +16,7 @@ export type MulterStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 export interface SetupOptions {
   fields: MulterField[],
   limits: MulterLimits,
-  fileFilter: AnyFn,
+  limitGuard: (file: MulterFile) => void,
   fileStrategy: MulterStrategy,
 }
 
