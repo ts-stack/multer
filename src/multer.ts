@@ -4,34 +4,17 @@ import { createFileFilter } from './file-filter.js';
 import { createMiddleware } from './middleware.js';
 import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
 
-function parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
-  const input = limits![key] == null ? defaultValue : limits![key];
-  const value = bytes.parse(input);
-  if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits![key]}`);
-  if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`);
-  return value;
-}
-
-function _middleware(limits: MulterLimits, fields: MulterField[], fileStrategy: MulterStrategy) {
-  return createMiddleware(() => ({
-    fields,
-    limits,
-    fileFilter: createFileFilter(fields),
-    fileStrategy,
-  }));
-}
-
 export class Multer {
   #limits: MulterLimits;
 
   constructor(options: MulterOptions = {}) {
     this.#limits = {
-      fieldNameSize: parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
-      fieldSize: parseLimit(options.limits || {}, 'fieldSize', '8KB'),
-      fields: parseLimit(options.limits || {}, 'fields', 1000),
-      fileSize: parseLimit(options.limits || {}, 'fileSize', '8MB'),
-      files: parseLimit(options.limits || {}, 'files', 10),
-      headerPairs: parseLimit(options.limits || {}, 'headerPairs', 2000),
+      fieldNameSize: this.parseLimit(options.limits || {}, 'fieldNameSize', '100B'),
+      fieldSize: this.parseLimit(options.limits || {}, 'fieldSize', '8KB'),
+      fields: this.parseLimit(options.limits || {}, 'fields', 1000),
+      fileSize: this.parseLimit(options.limits || {}, 'fileSize', '8MB'),
+      files: this.parseLimit(options.limits || {}, 'files', 10),
+      headerPairs: this.parseLimit(options.limits || {}, 'headerPairs', 2000),
     } as MulterLimits;
   }
 
@@ -39,7 +22,7 @@ export class Multer {
    * Accept a single file with the `name`. The single file will be stored in `req.file`.
    */
   single(name: string) {
-    return _middleware(this.#limits, [{ name: name, maxCount: 1 }], 'VALUE');
+    return this.middleware(this.#limits, [{ name: name, maxCount: 1 }], 'VALUE');
   }
 
   /**
@@ -48,7 +31,7 @@ export class Multer {
    * `req.files`.
    */
   array(name: string, maxCount?: number) {
-    return _middleware(this.#limits, [{ name: name, maxCount: maxCount }], 'ARRAY');
+    return this.middleware(this.#limits, [{ name: name, maxCount: maxCount }], 'ARRAY');
   }
 
   /**
@@ -66,7 +49,7 @@ export class Multer {
 ```
    */
   fields(fields: MulterField[]) {
-    return _middleware(this.#limits, fields, 'OBJECT');
+    return this.middleware(this.#limits, fields, 'OBJECT');
   }
 
   /**
@@ -74,7 +57,7 @@ export class Multer {
    * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `upload.fields([])`.
    */
   none() {
-    return _middleware(this.#limits, [], 'NONE');
+    return this.middleware(this.#limits, [], 'NONE');
   }
 
   /**
@@ -87,11 +70,37 @@ export class Multer {
    * where you are handling the uploaded files.
    */
   any() {
-    return createMiddleware(() => ({
-      fields: [],
-      limits: this.#limits,
-      fileFilter: () => {},
-      fileStrategy: 'ARRAY',
-    }));
+    return this.middleware(this.#limits, [], 'ARRAY', true);
+  }
+
+  protected middleware(
+    limits: MulterLimits,
+    fields: MulterField[],
+    fileStrategy: MulterStrategy,
+    withoutFilter?: boolean,
+  ) {
+    if (withoutFilter) {
+      return createMiddleware(() => ({
+        fields,
+        limits,
+        fileFilter: () => {},
+        fileStrategy,
+      }));
+    } else {
+      return createMiddleware(() => ({
+        fields,
+        limits,
+        fileFilter: createFileFilter(fields),
+        fileStrategy,
+      }));
+    }
+  }
+
+  protected parseLimit(limits: MulterLimits, key: keyof MulterLimits, defaultValue: string | number) {
+    const input = limits![key] == null ? defaultValue : limits![key];
+    const value = bytes.parse(input);
+    if (!Number.isFinite(value)) throw new Error(`Invalid limit "${key}" given: ${limits![key]}`);
+    if (!Number.isInteger(value)) throw new Error(`Invalid limit "${key}" given: ${value}`);
+    return value;
   }
 }
