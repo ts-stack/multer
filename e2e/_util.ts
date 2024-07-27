@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import fs from 'node:fs';
 import { PassThrough } from 'node:stream';
 import { promisify } from 'node:util';

@@ -2,10 +2,10 @@ import bytes from 'bytes';
 
 import { createLimitGuard } from './limit-guard.js';
 import { createMiddleware } from './middleware.js';
-import { MulterStrategy, MulterField, MulterLimits, MulterOptions } from './types.js';
+import { MulterStrategy, MulterField, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
 
 export class Multer {
-  #limits: MulterLimits;
+  #limits: NormalizedLimits;
 
   constructor(options: MulterOptions = {}) {
     this.#limits = {
@@ -15,7 +15,7 @@ export class Multer {
       fileSize: this.parseLimit(options.limits || {}, 'fileSize', '8MB'),
       files: this.parseLimit(options.limits || {}, 'files', 10),
       headerPairs: this.parseLimit(options.limits || {}, 'headerPairs', 2000),
-    } as MulterLimits;
+    } as NormalizedLimits;
   }
 
   /**
@@ -74,7 +74,7 @@ export class Multer {
   }
 
   protected middleware(
-    limits: MulterLimits,
+    limits: NormalizedLimits,
     fields: MulterField[],
     fileStrategy: MulterStrategy,
     withoutGuard?: boolean,

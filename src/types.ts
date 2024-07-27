@@ -15,7 +15,7 @@ export type MulterStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 
 export interface SetupOptions {
   fields: MulterField[],
-  limits: MulterLimits,
+  limits: NormalizedLimits,
   limitGuard: (file: MulterFile) => void,
   fileStrategy: MulterStrategy,
 }
@@ -41,26 +41,35 @@ export interface MulterLimits {
   /**
    * Max number of bytes per field name. (Default `'100B'`)
    */
-  fieldNameSize?: number;
+  fieldNameSize?: number | string;
   /**
    * Max number of bytes per field value. (Default `'8KB'`)
    */
-  fieldSize?: number;
+  fieldSize?: number | string;
   /**
    * Max number of fields per request. (Default `1000`)
    */
-  fields?: number;
+  fields?: number | string;
   /**
    * Max number of bytes per file. (Default `'8MB'`)
    */
-  fileSize?: number;
+  fileSize?: number | string;
   /**
    * Max number of files per request. (Default `10`)
    */
-  files?: number;
+  files?: number | string;
   /**
    * Max number of header key-value pairs. (Default `2000`, ssame as Node's http)
    */
+  headerPairs?: number | string;
+}
+
+export interface NormalizedLimits extends MulterLimits {
+  fieldNameSize?: number;
+  fieldSize?: number;
+  fields?: number;
+  fileSize?: number;
+  files?: number;
   headerPairs?: number;
 }
 

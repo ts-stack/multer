@@ -10,7 +10,7 @@ import { AnyFn, MulterField, MulterLimits, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {
-  return new Multer({ limits: limits }).fields(fields);
+  return new Multer({ limits }).fields(fields);
 }
 
 function hasCode(code: ErrorMessageCode) {

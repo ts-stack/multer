@@ -8,7 +8,7 @@ import _onFinished from 'on-finished';
 import FileType from 'stream-file-type';
 
 import { MulterError } from './error.js';
-import { MulterFile, MulterFileFilter, MulterLimits, Req } from './types.js';
+import { MulterFile, MulterFileFilter, NormalizedLimits, Req } from './types.js';
 
 const onFinished = promisify(_onFinished);
 const pipeline = promisify(_pipeline);
@@ -17,7 +17,7 @@ function drainStream(stream: Readable) {
   stream.on('readable', stream.read.bind(stream));
 }
 
-function collectFields(busboy: Busboy, limits: MulterLimits) {
+function collectFields(busboy: Busboy, limits: NormalizedLimits) {
   return new Promise<{ key: string; value: string }[]>((resolve, reject) => {
     const result: { key: string; value: string }[] = [];
 
@@ -39,7 +39,7 @@ function collectFields(busboy: Busboy, limits: MulterLimits) {
   });
 }
 
-function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFileFilter) {
+function collectFiles(busboy: Busboy, limits: NormalizedLimits, fileFilter: MulterFileFilter) {
   return new Promise<MulterFile[]>((resolve, reject) => {
     const result: Promise<MulterFile>[] = [];
 
@@ -96,7 +96,7 @@ function collectFiles(busboy: Busboy, limits: MulterLimits, fileFilter: MulterFi
   });
 }
 
-export async function readBody(req: Req, limits: MulterLimits, fileFilter: MulterFileFilter) {
+export async function readBody(req: Req, limits: NormalizedLimits, fileFilter: MulterFileFilter) {
   const busboy = new Busboy({ headers: req.headers as any, limits: limits });
 
   const promiseFields = collectFields(busboy, limits);
