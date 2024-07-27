@@ -8,7 +8,7 @@ import _onFinished from 'on-finished';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, Req, Res } from '#lib/types.js';
+import { AnyFn, MulterLimits, Req, Res } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 
@@ -44,8 +44,8 @@ describe('Express Integration', () => {
   }
 
   it('should work with express error handling', async () => {
-    const limits = { fileSize: 200 };
-    const upload = new Multer({ limits: limits });
+    const limits: MulterLimits = { fileSize: 200 };
+    const promiseMiddleware = promisify(new Multer({ limits }).single('avatar'));
     const router = new (express as any).Router() as Router;
     const form = new FormData();
 
@@ -54,9 +54,14 @@ describe('Express Integration', () => {
 
     form.append('avatar', util.file('large'));
 
-    router.post('/profile', upload.single('avatar'), (req, res, next) => {
-      routeCalled++;
-      res.status(200).end('SUCCESS');
+    router.post('/profile', async (req, res, next) => {
+      try {
+        await promiseMiddleware(req, res);
+        routeCalled++;
+        res.status(200).end('SUCCESS');
+      } catch (err) {
+        next(err);
+      }
     });
 
     router.use((err: any, req: Req, res: Res, next: AnyFn) => {
@@ -77,7 +82,7 @@ describe('Express Integration', () => {
   });
 
   it('should work when uploading a file', async () => {
-    const upload = new Multer();
+    const promiseMiddleware = promisify(new Multer().single('avatar'));
     const router = new (express as any).Router() as Router;
     const form = new FormData();
 
@@ -86,9 +91,14 @@ describe('Express Integration', () => {
 
     form.append('avatar', util.file('large'));
 
-    router.post('/profile', upload.single('avatar'), (_, res) => {
-      routeCalled++;
-      res.status(200).end('SUCCESS');
+    router.post('/profile', async (req, res, next) => {
+      try {
+        await promiseMiddleware(req, res);
+        routeCalled++;
+        res.status(200).end('SUCCESS');
+      } catch (err) {
+        next(err);
+      }
     });
 
     router.use((_: any, __: any, res: Res, ___: any) => {
