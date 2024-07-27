@@ -16,12 +16,10 @@
     "#lib/*": "./dist/*"
   },
   "keywords": [
-    "form",
-    "post",
     "multipart",
     "form-data",
     "formdata",
-    "middleware"
+    "ts-stack"
   ],
   "dependencies": {
     "@fastify/busboy": "^3.0.0",

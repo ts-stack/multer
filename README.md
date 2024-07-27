@@ -1,7 +1,6 @@
 # @ts-stack/multer
 
-Multer is a node.js middleware for handling `multipart/form-data`, which is primarily used for uploading files. It is written
-on top of [busboy](https://github.com/mscdex/busboy) for maximum efficiency.
+Is a node.js library for handling `multipart/form-data`, which is primarily used for uploading files. It is fork of [ExpressJS multer v2.0.0-rc.4](https://github.com/expressjs/multer/tree/explore-new-api).
 
 **NOTE**: Multer will not process any form which is not multipart (`multipart/form-data`).
 
@@ -13,7 +12,7 @@ npm install @ts-stack/multer
 
 ## Usage
 
-Multer adds a `body` object and a `file` or `files` object to the `request` object. The `body` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
+Multer an object with three properties: `fields`, `file` or `files`. The `fields` object contains the values of the text fields of the form, the `file` or `files` object contains the files uploaded via the form.
 
 Basic usage example:
 
@@ -57,28 +56,5 @@ const upload = new Multer();
 
 app.post('/profile', upload.none(), (req, res, next) => {
   // req.body contains the text fields
-});
-```
-
-## Error handling
-
-When encountering an error, multer will delegate the error to express. You can
-display a nice error page using [the standard express way](http://expressjs.com/guide/error-handling.html).
-
-If you want to catch errors specifically from multer, you can call the
-middleware function by yourself.
-
-```ts
-const upload = new Multer().single('avatar');
-
-app.post('/profile', (req, res) => {
-  upload(req, res, (err) => {
-    if (err) {
-      // An error occurred when uploading
-      return
-    }
-
-    // Everything went fine
-  });
 });
 ```
