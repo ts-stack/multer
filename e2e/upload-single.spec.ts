@@ -2,10 +2,10 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { Middleware } from '#lib/types.js';
+import { ParserFn } from '#lib/types.js';
 
 describe('upload.single', () => {
-  let parser: Middleware;
+  let parser: ParserFn;
 
   beforeAll(() => {
     parser = new Multer().single('file');
@@ -18,7 +18,7 @@ describe('upload.single', () => {
     form.append('file', util.file('small'));
 
     const req = await util.submitForm(parser, form);
-    expect(req.body.name).toBe('Multer');
+    expect(req.formFields.name).toBe('Multer');
 
     await util.assertFile(req.file!, 'file', 'small');
   });

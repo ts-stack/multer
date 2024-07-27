@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import { PassThrough } from 'node:stream';
 import { promisify } from 'node:util';
 
@@ -50,9 +49,8 @@ describe('Aborted requests', () => {
       'content-length': length,
     };
 
-    const result = promisify(parser)(form.pipe(req) as any, null);
-
-    return assert.rejects(result, (err: any) => err.code === 'CLIENT_ABORTED');
+    const result = parser(form.pipe(req) as any, (req as any).headers);
+    await expect(result).rejects.toMatchObject({ code: 'CLIENT_ABORTED' });
   });
 
   it('should handle clients erroring the request', async () => {
@@ -69,8 +67,7 @@ describe('Aborted requests', () => {
       'content-length': length,
     };
 
-    const result = promisify(parser)(form.pipe(req) as any, null);
-
-    return assert.rejects(result, (err: any) => err.message === 'TEST_ERROR');
+    const result = parser(form.pipe(req) as any, (req as any).headers);
+    await expect(result).rejects.toMatchObject({ message: 'TEST_ERROR' });
   });
 });

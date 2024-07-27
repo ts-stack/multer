@@ -1,34 +1,33 @@
-import assert from 'node:assert';
 import { PassThrough } from 'node:stream';
-import { promisify } from 'node:util';
-
 import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterField, MulterLimits, Req } from '#lib/types.js';
+import { AnyFn, MulterField, MulterLimits, ParserFn, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {
   return new Multer({ limits }).fields(fields);
 }
 
-function hasCode(code: ErrorMessageCode) {
-  return (err: any) => err.code === code;
+function hasCode(parser: ParserFn, form: FormData, code: ErrorMessageCode) {
+  return expect(util.submitForm(parser, form)).rejects.toMatchObject({ code });
 }
 
-function hasCodeAndField(code: ErrorMessageCode, field: MulterField) {
-  return (err: any) => err.code === code && err.field === field;
+function hasCodeAndField(parser: ParserFn, form: FormData, code: ErrorMessageCode, field: string) {
+  return expect(util.submitForm(parser, form)).rejects.toMatchObject({ code, field });
 }
 
-function hasMessage(message: string) {
-  return (err: any) => err.message === message;
+function hasMessage(parser: ParserFn, req: Req, message: string) {
+  return expect(parser(req, req.headers)).rejects.toMatchObject({ message });
 }
 
 describe('Error Handling', () => {
   it('should throw on invalid limits', () => {
-    assert.throws(() => new Multer({ limits: { files: 3.14 } }), /Invalid limit "files" given: 3.14/);
-    assert.throws(() => new Multer({ limits: { fileSize: 'foobar' as any } }), /Invalid limit "fileSize" given: foobar/);
+    expect(() => new Multer({ limits: { files: 3.14 } })).toThrow('Invalid limit "files" given: 3.14');
+    expect(() => new Multer({ limits: { fileSize: 'foobar' as any } })).toThrow(
+      'Invalid limit "fileSize" given: foobar',
+    );
   });
 
   it('should respect file size limit', async () => {
@@ -41,7 +40,7 @@ describe('Error Handling', () => {
     form.append('tiny', util.file('tiny'));
     form.append('small', util.file('small'));
 
-    await assert.rejects(util.submitForm(parser, form), hasCodeAndField('LIMIT_FILE_SIZE', 'small' as any));
+    await hasCodeAndField(parser, form, 'LIMIT_FILE_SIZE', 'small');
   });
 
   it('should respect file count limit', async () => {
@@ -54,7 +53,7 @@ describe('Error Handling', () => {
     form.append('small', util.file('small'));
     form.append('small', util.file('small'));
 
-    await assert.rejects(util.submitForm(parser, form), hasCode('LIMIT_FILE_COUNT'));
+    await hasCode(parser, form, 'LIMIT_FILE_COUNT');
   });
 
   it('should respect file key limit', async () => {
@@ -63,7 +62,7 @@ describe('Error Handling', () => {
 
     form.append('small', util.file('small'));
 
-    await assert.rejects(util.submitForm(parser, form), hasCode('LIMIT_FIELD_KEY'));
+    await hasCode(parser, form, 'LIMIT_FIELD_KEY');
   });
 
   it('should respect field key limit', async () => {
@@ -73,7 +72,7 @@ describe('Error Handling', () => {
     form.append('ok', 'SMILE');
     form.append('blowup', 'BOOM!');
 
-    await assert.rejects(util.submitForm(parser, form), hasCode('LIMIT_FIELD_KEY'));
+    await hasCode(parser, form, 'LIMIT_FIELD_KEY');
   });
 
   it('should respect field value limit', async () => {
@@ -83,7 +82,7 @@ describe('Error Handling', () => {
     form.append('field0', 'This is okay');
     form.append('field1', 'This will make the parser explode');
 
-    await assert.rejects(util.submitForm(parser, form), hasCodeAndField('LIMIT_FIELD_VALUE', 'field1' as any));
+    await hasCodeAndField(parser, form, 'LIMIT_FIELD_VALUE', 'field1');
   });
 
   it('should respect field count limit', async () => {
@@ -93,7 +92,7 @@ describe('Error Handling', () => {
     form.append('field0', 'BOOM!');
     form.append('field1', 'BOOM!');
 
-    await assert.rejects(util.submitForm(parser, form), hasCode('LIMIT_FIELD_COUNT'));
+    await hasCode(parser, form, 'LIMIT_FIELD_COUNT');
   });
 
   it('should respect fields given', async () => {
@@ -102,12 +101,12 @@ describe('Error Handling', () => {
 
     form.append('small', util.file('small'));
 
-    await assert.rejects(util.submitForm(parser, form), hasCodeAndField('LIMIT_UNEXPECTED_FILE', 'small' as any));
+    await hasCodeAndField(parser, form, 'LIMIT_UNEXPECTED_FILE', 'small');
   });
 
   it('should report errors from busboy constructor', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = new Multer().single('tiny');
+    const parser = new Multer().single('tiny');
     const body = 'test';
 
     req.headers = {
@@ -117,12 +116,12 @@ describe('Error Handling', () => {
 
     req.end(body);
 
-    await assert.rejects(promisify(upload)(req, null), hasMessage('Multipart: Boundary not found'));
+    await hasMessage(parser, req, 'Multipart: Boundary not found');
   });
 
   it('should report errors from busboy parsing', async () => {
     const req = new PassThrough() as unknown as Req & { end: AnyFn };
-    const upload = new Multer().single('tiny');
+    const parser = new Multer().single('tiny');
     const boundary = 'AaB03x';
     const body = [
       `--${boundary}`,
@@ -139,7 +138,7 @@ describe('Error Handling', () => {
 
     req.end(body);
 
-    await assert.rejects(promisify(upload)(req, null), hasMessage('Unexpected end of multipart data'));
+    await hasMessage(parser, req, 'Unexpected end of multipart data');
   });
 
   it('should gracefully handle more than one error at a time', async () => {
@@ -149,6 +148,6 @@ describe('Error Handling', () => {
     form.append('small', util.file('small'));
     form.append('small', util.file('small'));
 
-    await assert.rejects(util.submitForm(parser, form), hasCode('LIMIT_FILE_SIZE'));
+    await hasCode(parser, form, 'LIMIT_FILE_SIZE');
   });
 });

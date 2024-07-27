@@ -1,19 +1,15 @@
-import assert from 'node:assert';
 import { PassThrough } from 'node:stream';
-import { promisify } from 'node:util';
 
 import FormData from 'form-data';
-// @ts-ignore
-import recursiveNullify from 'recursive-nullify';
 // @ts-ignore
 import testData from 'testdata-w3c-json-form';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, Middleware, Req } from '#lib/types.js';
+import { AnyFn, MulterFilesWithMetadata, ParserFn, Req } from '#lib/types.js';
 
 describe('body', () => {
-  let parser: Middleware;
+  let parser: ParserFn;
 
   beforeAll(() => {
     parser = new Multer().none();
@@ -26,16 +22,13 @@ describe('body', () => {
     form.append('key', 'value');
     form.append('abc', 'xyz');
 
-    const req = await util.submitForm(parser, form);
+    const filesWithMetadata = await util.submitForm(parser, form);
 
-    assert.deepStrictEqual(
-      req.body,
-      recursiveNullify({
-        name: 'Multer',
-        key: 'value',
-        abc: 'xyz',
-      }),
-    );
+    expect(filesWithMetadata.formFields).toMatchObject({
+      name: 'Multer',
+      key: 'value',
+      abc: 'xyz',
+    });
   });
 
   it('should process empty fields', async () => {
@@ -51,19 +44,16 @@ describe('body', () => {
     form.append('checkboxempty', '');
     form.append('checkboxempty', '');
 
-    const req = await util.submitForm(parser, form);
+    const filesWithMetadata = await util.submitForm(parser, form);
 
-    assert.deepStrictEqual(
-      req.body,
-      recursiveNullify({
-        name: 'Multer',
-        key: '',
-        abc: '',
-        checkboxfull: ['cb1', 'cb2'],
-        checkboxhalfempty: ['cb1', ''],
-        checkboxempty: ['', ''],
-      }),
-    );
+    expect(filesWithMetadata.formFields).toMatchObject({
+      name: 'Multer',
+      key: '',
+      abc: '',
+      checkboxfull: ['cb1', 'cb2'],
+      checkboxhalfempty: ['cb1', ''],
+      checkboxempty: ['', ''],
+    });
   });
 
   it('should not process non-multipart POST request', async () => {
@@ -76,10 +66,10 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    await promisify(parser)(req, null);
+    const filesWithMetadata = await parser(req, req.headers) as MulterFilesWithMetadata;
 
-    expect(req.body !== undefined).toBe(false);
-    expect(req.files !== undefined).toBe(false);
+    expect(filesWithMetadata.formFields).toBeUndefined();
+    expect(filesWithMetadata.files).toBeUndefined();
   });
 
   it('should not process non-multipart GET request', async () => {
@@ -92,10 +82,10 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    await promisify(parser)(req, null);
+    const filesWithMetadata = await parser(req, req.headers) as MulterFilesWithMetadata;
 
-    expect(req.body !== undefined).toBe(false);
-    expect(req.files !== undefined).toBe(false);
+    expect(filesWithMetadata.formFields).toBeUndefined();
+    expect(filesWithMetadata.files).toBeUndefined();
   });
 
   for (const test of testData) {
@@ -106,9 +96,9 @@ describe('body', () => {
         form.append(field.key, field.value);
       }
 
-      const req = await util.submitForm(parser, form);
+      const filesWithMetadata = await util.submitForm(parser, form);
 
-      assert.deepStrictEqual(req.body, recursiveNullify(test.expected));
+      expect(filesWithMetadata.formFields).toMatchObject(test.expected);
     });
   }
 
@@ -119,17 +109,14 @@ describe('body', () => {
     form.append('obj[2]', 'c');
     form.append('obj[x]', 'yz');
 
-    const req = await util.submitForm(parser, form);
+    const filesWithMetadata = await util.submitForm(parser, form);
 
-    assert.deepStrictEqual(
-      req.body,
-      recursiveNullify({
-        obj: {
-          0: 'a',
-          2: 'c',
-          x: 'yz',
-        },
-      }),
-    );
+    expect(filesWithMetadata.formFields).toMatchObject({
+      obj: {
+        0: 'a',
+        2: 'c',
+        x: 'yz',
+      },
+    });
   });
 });

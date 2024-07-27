@@ -1,4 +1,3 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
@@ -11,9 +10,6 @@ describe('limits', () => {
 
     form.append('file', util.file('large'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_FILE_SIZE' && err.field === 'file',
-    );
+    await expect(util.submitForm(parser, form)).rejects.toMatchObject({ code: 'LIMIT_FILE_SIZE', field: 'file' });
   });
 });

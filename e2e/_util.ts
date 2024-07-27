@@ -5,11 +5,11 @@ import FormData from 'form-data';
 
 import hasha from 'hasha';
 import _onFinished from 'on-finished';
-import { Middleware, MulterFile, Req } from '#lib/types.js';
+import { MulterFile, ParserFn, Req } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 
-type FileSize = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
+export type FileSize = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
 
 const files = new Map<FileSize, Partial<MulterFile>>([
   [
@@ -107,7 +107,7 @@ function getLength(form: FormData) {
   return promisify(form.getLength).call(form);
 }
 
-export async function submitForm(multer: Middleware, form: FormData) {
+export async function submitForm(parse: ParserFn, form: FormData) {
   const length = await getLength(form);
   const req = new PassThrough() as unknown as Req;
 
@@ -122,8 +122,11 @@ export async function submitForm(multer: Middleware, form: FormData) {
     'content-length': String(length),
   };
 
-  await promisify(multer)(req, null);
+  const result = await parse(req, req.headers);
   await onFinished(req);
+  if (!result) {
+    throw new Error('no parsing!')
+  }
 
-  return req;
+  return result;
 }

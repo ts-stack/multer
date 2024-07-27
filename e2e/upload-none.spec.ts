@@ -2,10 +2,10 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { Middleware } from '#lib/types.js';
+import { ParserFn } from '#lib/types.js';
 
 describe('upload.none', () => {
-  let parser: Middleware;
+  let parser: ParserFn;
 
   beforeAll(() => {
     parser = new Multer().none();
@@ -22,8 +22,8 @@ describe('upload.none', () => {
     expect(req.file).toBe(undefined);
     expect(req.files).toBe(undefined);
 
-    expect(req.body.foo).toBe('bar');
-    expect(req.body.test).toBe('yes');
+    expect(req.formFields.foo).toBe('bar');
+    expect(req.formFields.test).toBe('yes');
   });
 
   it('should reject single file', async () => {

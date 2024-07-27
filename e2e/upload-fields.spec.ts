@@ -1,12 +1,11 @@
-import assert from 'node:assert';
 import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { MulterFilesInObject, Middleware } from '#lib/types.js';
+import { MulterFilesInObject, ParserFn } from '#lib/types.js';
 
 describe('upload.fields', () => {
-  let parser: Middleware;
+  let parser: ParserFn;
 
   beforeAll(() => {
     parser = new Multer().fields([
@@ -86,10 +85,7 @@ describe('upload.fields', () => {
     form.append('CA$|-|', util.file('small'));
     form.append('CA$|-|', util.file('small'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_FILE_COUNT' && err.field === 'CA$|-|',
-    );
+    await expect(util.submitForm(parser, form)).rejects.toMatchObject({ code: 'LIMIT_FILE_COUNT', field: 'CA$|-|' });
   });
 
   it('should reject unexpected field', async () => {
@@ -98,9 +94,6 @@ describe('upload.fields', () => {
     form.append('name', 'Multer');
     form.append('unexpected', util.file('small'));
 
-    await assert.rejects(
-      util.submitForm(parser, form),
-      (err: any) => err.code === 'LIMIT_UNEXPECTED_FILE' && err.field === 'unexpected',
-    );
+    await expect(util.submitForm(parser, form)).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'unexpected' });
   });
 });

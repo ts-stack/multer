@@ -1,23 +1,29 @@
 import { Readable } from 'node:stream';
-import type { Request, Response } from 'express';
+import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
 
-export type Middleware = (req: Req, res: any, next: AnyFn) => void;
 export interface MulterFilesInObject {
   [key: string]: MulterFile[];
 }
-export interface Req extends Request {
-  files?: MulterFile[] | MulterFilesInObject;
-  file?: MulterFile | null;
-}
-export type Res = Response;
+export type Req = IncomingMessage;
+export type Res = ServerResponse;
 export type AnyFn<T = any> = (...args: any[]) => T;
-export type MulterStrategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
+export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
+
+export interface ParserFn {
+  (req: Req, headers: IncomingHttpHeaders): Promise<false | MulterFilesWithMetadata | null>;
+}
+
+export interface MulterFilesWithMetadata {
+  formFields: { [key: string]: string };
+  files?: MulterFile[] | MulterFilesInObject;
+  file?: MulterFile;
+}
 
 export interface SetupOptions {
-  fields: MulterField[],
-  limits: NormalizedLimits,
-  limitGuard: (file: MulterFile) => void,
-  fileStrategy: MulterStrategy,
+  fields: MulterField[];
+  limits: NormalizedLimits;
+  limitGuard: LimitGuard;
+  fileStrategy: Strategy;
 }
 
 /**
@@ -25,7 +31,7 @@ export interface SetupOptions {
  * pass a boolean to indicate if the file should be accepted
  * pass an error if something goes wrong
  */
-export interface MulterFileFilter {
+export interface LimitGuard {
   (file: MulterFile): void;
 }
 

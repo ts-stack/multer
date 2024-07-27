@@ -1,6 +1,6 @@
-import { MulterFilesInObject, MulterStrategy, MulterField, MulterFile } from './types.js';
+import { MulterFilesInObject, Strategy, MulterField, MulterFile } from './types.js';
 
-export function createFileAppender(strategy: MulterStrategy, obj: { file?: any; files?: any }, fields: MulterField[]) {
+export function createFileAppender(strategy: Strategy, obj: { file?: any; files?: any }, fields: MulterField[]) {
   switch (strategy) {
     case 'NONE':
       break;

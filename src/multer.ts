@@ -1,8 +1,8 @@
 import bytes from 'bytes';
 
 import { createLimitGuard } from './limit-guard.js';
-import { createMiddleware } from './middleware.js';
-import { MulterStrategy, MulterField, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
+import { createHandler } from './handler.js';
+import { Strategy, MulterField, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
 
 export class Multer {
   #limits: NormalizedLimits;
@@ -15,7 +15,7 @@ export class Multer {
    * Accept a single file with the `name`. The single file will be stored in `req.file`.
    */
   single(name: string) {
-    return this.middleware(this.#limits, [{ name, maxCount: 1 }], 'VALUE');
+    return this.handle(this.#limits, [{ name, maxCount: 1 }], 'VALUE');
   }
 
   /**
@@ -24,7 +24,7 @@ export class Multer {
    * `req.files`.
    */
   array(name: string, maxCount?: number) {
-    return this.middleware(this.#limits, [{ name, maxCount }], 'ARRAY');
+    return this.handle(this.#limits, [{ name, maxCount }], 'ARRAY');
   }
 
   /**
@@ -42,7 +42,7 @@ export class Multer {
 ```
    */
   fields(fields: MulterField[]) {
-    return this.middleware(this.#limits, fields, 'OBJECT');
+    return this.handle(this.#limits, fields, 'OBJECT');
   }
 
   /**
@@ -50,7 +50,7 @@ export class Multer {
    * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `upload.fields([])`.
    */
   none() {
-    return this.middleware(this.#limits, [], 'NONE');
+    return this.handle(this.#limits, [], 'NONE');
   }
 
   /**
@@ -58,12 +58,12 @@ export class Multer {
    * `req.files`.
    *
    * **WARNING:** Make sure that you always handle the files that a user uploads.
-   * Never add multer as a global middleware since a malicious user could upload
+   * Never use this method as a global parser since a malicious user could upload
    * files to a route that you didn't anticipate. Only use this function on routes
    * where you are handling the uploaded files.
    */
   any() {
-    return this.middleware(this.#limits, [], 'ARRAY', true);
+    return this.handle(this.#limits, [], 'ARRAY', true);
   }
 
   protected normalizeLimits(options: MulterOptions) {
@@ -86,21 +86,21 @@ export class Multer {
     return value;
   }
 
-  protected middleware(
+  protected handle(
     limits: NormalizedLimits,
     fields: MulterField[],
-    fileStrategy: MulterStrategy,
+    fileStrategy: Strategy,
     withoutGuard?: boolean,
   ) {
     if (withoutGuard) {
-      return createMiddleware(() => ({
+      return createHandler(() => ({
         fields,
         limits,
         limitGuard: () => {},
         fileStrategy,
       }));
     } else {
-      return createMiddleware(() => ({
+      return createHandler(() => ({
         fields,
         limits,
         limitGuard: createLimitGuard(fields),
