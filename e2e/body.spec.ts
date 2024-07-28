@@ -57,7 +57,7 @@ describe('body', () => {
   });
 
   it('should not process non-multipart POST request', async () => {
-    const req = new PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as any;
 
     req.end('name=Multer');
     req.method = 'POST';
@@ -73,7 +73,7 @@ describe('body', () => {
   });
 
   it('should not process non-multipart GET request', async () => {
-    const req = new PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as any;
 
     req.end('name=Multer');
     req.method = 'GET';

@@ -1,10 +1,10 @@
 import { Readable } from 'node:stream';
-import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
+import { IncomingHttpHeaders, ServerResponse } from 'node:http';
 
 export type MulterFileGroups<G extends string = string> = {
   [key in G]: MulterFile[];
 }
-export type Req = IncomingMessage;
+export type Req = Readable;
 export type Res = ServerResponse;
 export type AnyFn<T = any> = (...args: any[]) => T;
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';

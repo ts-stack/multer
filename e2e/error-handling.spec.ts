@@ -3,7 +3,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterGroup, MulterLimits, MulterParser, Req } from '#lib/types.js';
+import { MulterGroup, MulterLimits, MulterParser } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterGroup[]) {
@@ -18,7 +18,7 @@ function hasCodeAndField(parser: MulterParser, form: FormData, code: ErrorMessag
   return expect(util.submitForm(parser, form)).rejects.toMatchObject({ code, field });
 }
 
-function hasMessage(parser: MulterParser, req: Req, message: string) {
+function hasMessage(parser: MulterParser, req: any, message: string) {
   return expect(parser(req, req.headers)).rejects.toMatchObject({ message });
 }
 
@@ -105,7 +105,7 @@ describe('Error Handling', () => {
   });
 
   it('should report errors from busboy constructor', async () => {
-    const req = new PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as any;
     const parser = new Multer().single('tiny');
     const body = 'test';
 
@@ -120,7 +120,7 @@ describe('Error Handling', () => {
   });
 
   it('should report errors from busboy parsing', async () => {
-    const req = new PassThrough() as unknown as Req & { end: AnyFn };
+    const req = new PassThrough() as any;
     const parser = new Multer().single('tiny');
     const boundary = 'AaB03x';
     const body = [

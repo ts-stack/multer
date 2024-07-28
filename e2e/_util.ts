@@ -109,7 +109,7 @@ function getLength(form: FormData) {
 
 export async function submitForm(parse: MulterParser, form: FormData) {
   const length = await getLength(form);
-  const req = new PassThrough() as unknown as Req;
+  const req = new PassThrough() as any;
 
   req.complete = false;
   form.once('end', () => {
