@@ -4,7 +4,7 @@ import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
 import { ParserFn } from '#lib/types.js';
 
-describe('upload.fields', () => {
+describe('upload.groups', () => {
   let parser: ParserFn;
 
   beforeAll(() => {
