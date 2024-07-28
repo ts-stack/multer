@@ -5,13 +5,13 @@ import { hasBody, typeIs } from '@ts-stack/type-is';
 
 import { createFileAppender } from './file-appender.js';
 import { readBody } from './read-body.js';
-import { AnyFn, SetupOptions, Req, MulterFilesWithMetadata } from './types.js';
+import { AnyFn, SetupOptions, Req, MulterParsedForm } from './types.js';
 
 export function createHandler(setup: AnyFn<SetupOptions>) {
   return async function multerHandler(
     req: Req,
     headers: IncomingHttpHeaders,
-  ): Promise<false | MulterFilesWithMetadata | null> {
+  ): Promise<false | MulterParsedForm | null> {
     if (!hasBody(headers)) {
       return null;
     }
@@ -21,7 +21,7 @@ export function createHandler(setup: AnyFn<SetupOptions>) {
     const options = setup();
     const result = await readBody(req, options.limits, options.limitGuard);
 
-    const filesWithMetadata = Object.create(null) as MulterFilesWithMetadata;
+    const filesWithMetadata = Object.create(null) as MulterParsedForm;
     filesWithMetadata.formFields = Object.create(null);
 
     for (const field of result.fields) {

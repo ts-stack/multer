@@ -6,7 +6,7 @@ import testData from 'testdata-w3c-json-form';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterFilesWithMetadata, ParserFn, Req } from '#lib/types.js';
+import { AnyFn, MulterParsedForm, ParserFn, Req } from '#lib/types.js';
 
 describe('body', () => {
   let parser: ParserFn;
@@ -66,7 +66,7 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    const filesWithMetadata = await parser(req, req.headers) as MulterFilesWithMetadata;
+    const filesWithMetadata = await parser(req, req.headers) as MulterParsedForm;
 
     expect(filesWithMetadata.formFields).toBeUndefined();
     expect(filesWithMetadata.files).toBeUndefined();
@@ -82,7 +82,7 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    const filesWithMetadata = await parser(req, req.headers) as MulterFilesWithMetadata;
+    const filesWithMetadata = await parser(req, req.headers) as MulterParsedForm;
 
     expect(filesWithMetadata.formFields).toBeUndefined();
     expect(filesWithMetadata.files).toBeUndefined();

@@ -5,5 +5,5 @@ export {
   MulterLimits,
   MulterOptions,
   MulterFileGroups,
-  MulterFilesWithMetadata,
+  MulterParsedForm,
 } from './types.js';

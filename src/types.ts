@@ -10,10 +10,10 @@ export type AnyFn<T = any> = (...args: any[]) => T;
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 
 export interface ParserFn {
-  (req: Req, headers: IncomingHttpHeaders): Promise<false | MulterFilesWithMetadata | null>;
+  (req: Req, headers: IncomingHttpHeaders): Promise<false | MulterParsedForm | null>;
 }
 
-export interface MulterFilesWithMetadata {
+export interface MulterParsedForm {
   formFields: { [key: string]: string };
   files?: MulterFile[] | MulterFileGroups;
   file?: MulterFile;
