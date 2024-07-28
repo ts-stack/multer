@@ -1,7 +1,7 @@
 import { Readable } from 'node:stream';
 import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
 
-export interface MulterFilesInObject {
+export interface MulterFileGroups {
   [key: string]: MulterFile[];
 }
 export type Req = IncomingMessage;
@@ -15,7 +15,7 @@ export interface ParserFn {
 
 export interface MulterFilesWithMetadata {
   formFields: { [key: string]: string };
-  files?: MulterFile[] | MulterFilesInObject;
+  files?: MulterFile[] | MulterFileGroups;
   file?: MulterFile;
 }
 
@@ -65,7 +65,7 @@ export interface MulterLimits {
    */
   files?: number;
   /**
-   * Max number of header key-value pairs. (Default `2000`, ssame as Node's http)
+   * Max number of header key-value pairs. (Default `2000`, same as Node's http)
    */
   headerPairs?: number;
 }

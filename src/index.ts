@@ -4,6 +4,6 @@ export {
   MulterFile,
   MulterLimits,
   MulterOptions,
-  MulterFilesInObject,
+  MulterFileGroups,
   MulterFilesWithMetadata,
 } from './types.js';

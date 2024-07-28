@@ -2,13 +2,13 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { MulterFilesInObject, ParserFn } from '#lib/types.js';
+import { MulterFileGroups, ParserFn } from '#lib/types.js';
 
 describe('upload.fields', () => {
   let parser: ParserFn;
 
   beforeAll(() => {
-    parser = new Multer().fields([
+    parser = new Multer({ limits: { fileSize: '10MB' } }).groups([
       { name: 'CA$|-|', maxCount: 1 },
       { name: 'set-1', maxCount: 3 },
       { name: 'set-2', maxCount: 3 },
@@ -21,12 +21,12 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('tiny'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as MulterFilesInObject;
-    expect(filesInObject['CA$|-|'].length).toBe(0);
-    expect(filesInObject['set-1'].length).toBe(0);
-    expect(filesInObject['set-2'].length).toBe(1);
+    const fileGroups = req.files as MulterFileGroups;
+    expect(fileGroups['CA$|-|'].length).toBe(0);
+    expect(fileGroups['set-1'].length).toBe(0);
+    expect(fileGroups['set-2'].length).toBe(1);
 
-    await util.assertFile(filesInObject['set-2'][0], 'set-2', 'tiny');
+    await util.assertFile(fileGroups['set-2'][0], 'set-2', 'tiny');
   });
 
   it('should accept some files', async () => {
@@ -38,16 +38,16 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('tiny'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as MulterFilesInObject;
-    expect(filesInObject['CA$|-|'].length).toBe(1);
-    expect(filesInObject['set-1'].length).toBe(2);
-    expect(filesInObject['set-2'].length).toBe(1);
+    const fileGroups = req.files as MulterFileGroups;
+    expect(fileGroups['CA$|-|'].length).toBe(1);
+    expect(fileGroups['set-1'].length).toBe(2);
+    expect(fileGroups['set-2'].length).toBe(1);
 
     await util.assertFiles([
-      [filesInObject['CA$|-|'][0], 'CA$|-|', 'empty'],
-      [filesInObject['set-1'][0], 'set-1', 'small'],
-      [filesInObject['set-1'][1], 'set-1', 'empty'],
-      [filesInObject['set-2'][0], 'set-2', 'tiny'],
+      [fileGroups['CA$|-|'][0], 'CA$|-|', 'empty'],
+      [fileGroups['set-1'][0], 'set-1', 'small'],
+      [fileGroups['set-1'][1], 'set-1', 'empty'],
+      [fileGroups['set-2'][0], 'set-2', 'tiny'],
     ]);
   });
 
@@ -63,19 +63,19 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('empty'));
 
     const req = await util.submitForm(parser, form);
-    const filesInObject = req.files as MulterFilesInObject;
-    expect(filesInObject['CA$|-|'].length).toBe(1);
-    expect(filesInObject['set-1'].length).toBe(3);
-    expect(filesInObject['set-2'].length).toBe(3);
+    const fileGroups = req.files as MulterFileGroups;
+    expect(fileGroups['CA$|-|'].length).toBe(1);
+    expect(fileGroups['set-1'].length).toBe(3);
+    expect(fileGroups['set-2'].length).toBe(3);
 
     await util.assertFiles([
-      [filesInObject['CA$|-|'][0], 'CA$|-|', 'empty'],
-      [filesInObject['set-1'][0], 'set-1', 'tiny'],
-      [filesInObject['set-1'][1], 'set-1', 'empty'],
-      [filesInObject['set-1'][2], 'set-1', 'tiny'],
-      [filesInObject['set-2'][0], 'set-2', 'tiny'],
-      [filesInObject['set-2'][1], 'set-2', 'tiny'],
-      [filesInObject['set-2'][2], 'set-2', 'empty'],
+      [fileGroups['CA$|-|'][0], 'CA$|-|', 'empty'],
+      [fileGroups['set-1'][0], 'set-1', 'tiny'],
+      [fileGroups['set-1'][1], 'set-1', 'empty'],
+      [fileGroups['set-1'][2], 'set-1', 'tiny'],
+      [fileGroups['set-2'][0], 'set-2', 'tiny'],
+      [fileGroups['set-2'][1], 'set-2', 'tiny'],
+      [fileGroups['set-2'][2], 'set-2', 'empty'],
     ]);
   });
 
@@ -94,6 +94,9 @@ describe('upload.fields', () => {
     form.append('name', 'Multer');
     form.append('unexpected', util.file('small'));
 
-    await expect(util.submitForm(parser, form)).rejects.toMatchObject({ code: 'LIMIT_UNEXPECTED_FILE', field: 'unexpected' });
+    await expect(util.submitForm(parser, form)).rejects.toMatchObject({
+      code: 'LIMIT_UNEXPECTED_FILE',
+      field: 'unexpected',
+    });
   });
 });
