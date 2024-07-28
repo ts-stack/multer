@@ -4,13 +4,14 @@ import { promisify } from 'node:util';
 import { createWriteStream } from 'node:fs';
 import { Busboy } from '@fastify/busboy';
 import { temporaryFile } from 'tempy';
-import _onFinished from 'on-finished';
 import FileType from 'stream-file-type';
+import { IncomingHttpHeaders } from 'node:http';
 
 import { MulterError } from './error.js';
-import { MulterFile, LimitGuard, NormalizedLimits, Req } from './types.js';
+import { MulterFile, LimitGuard, NormalizedLimits } from './types.js';
+import { onFinished as preOnFinished } from './on-finished.js';
 
-const onFinished = promisify(_onFinished);
+const onFinished = promisify(preOnFinished);
 const pipeline = promisify(_pipeline);
 
 function drainStream(stream: Readable) {
@@ -96,8 +97,8 @@ function collectFiles(busboy: Busboy, limits: NormalizedLimits, limitGuard: Limi
   });
 }
 
-export async function readBody(req: Req, limits: NormalizedLimits, limitGuard: LimitGuard) {
-  const busboy = new Busboy({ headers: req.headers as any, limits: limits });
+export async function readBody(req: Readable, headers: IncomingHttpHeaders, limits: NormalizedLimits, limitGuard: LimitGuard) {
+  const busboy = new Busboy({ headers: headers as any, limits: limits });
 
   const promiseFields = collectFields(busboy, limits);
   const promiseFiles = collectFiles(busboy, limits, limitGuard);
