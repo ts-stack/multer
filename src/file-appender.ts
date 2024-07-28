@@ -1,17 +1,17 @@
-import { MulterFileGroups, Strategy, MulterGroup, MulterFile } from './types.js';
+import { MulterFileGroups, Strategy, MulterGroup, MulterFile, MulterParsedForm } from './types.js';
 
-export function createFileAppender(strategy: Strategy, obj: { file?: any; files?: any }, groups: MulterGroup[]) {
+export function createFileAppender(strategy: Strategy, obj: MulterParsedForm, groups: MulterGroup[]) {
   switch (strategy) {
     case 'NONE':
       break;
     case 'VALUE':
-      obj.file = null;
+      obj.file = Object.create(null) as any;
       break;
     case 'ARRAY':
       obj.files = [];
       break;
     case 'OBJECT':
-      obj.files = Object.create(null);
+      obj.groups = Object.create(null);
       break;
     default:
       throw new Error(`Unknown file strategy: ${strategy}`);
@@ -19,7 +19,7 @@ export function createFileAppender(strategy: Strategy, obj: { file?: any; files?
 
   if (strategy === 'OBJECT') {
     for (const group of groups) {
-      (obj.files as MulterFileGroups)[group.name] = [];
+      obj.groups[group.name] = [];
     }
   }
 
@@ -29,10 +29,10 @@ export function createFileAppender(strategy: Strategy, obj: { file?: any; files?
         obj.file = file;
         break;
       case 'ARRAY':
-        (obj.files as MulterFile[]).push(file);
+        obj.files.push(file);
         break;
       case 'OBJECT':
-        (obj.files as MulterFileGroups)[file.fieldName].push(file);
+        obj.groups[file.fieldName].push(file);
         break;
     }
   };

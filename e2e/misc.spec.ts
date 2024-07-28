@@ -14,10 +14,10 @@ describe('Misc', () => {
     form.append('file', util.file('small'), { filename });
 
     const filesWithMetadata = await util.submitForm(parser, form);
-    expect(filesWithMetadata.file!.originalName).toBe(filename);
+    expect(filesWithMetadata.file.originalName).toBe(filename);
 
     // Ignore content
-    filesWithMetadata.file!.stream.resume();
+    filesWithMetadata.file.stream.resume();
   });
 
   it('should handle absent filenames', async () => {
@@ -31,10 +31,10 @@ describe('Misc', () => {
     form.append('file', hidden, { knownLength: util.knownFileLength('small') });
 
     const filesWithMetadata = await util.submitForm(parser, form);
-    expect(filesWithMetadata.file!.originalName).toBe(undefined);
+    expect(filesWithMetadata.file.originalName).toBe(undefined);
 
     // Ignore content
-    filesWithMetadata.file!.stream.resume();
+    filesWithMetadata.file.stream.resume();
   });
 
   it('should present files in same order as they came', async () => {
@@ -45,7 +45,7 @@ describe('Misc', () => {
     form.append('themFiles', util.file('tiny'));
 
     const filesWithMetadata = await util.submitForm(parser, form);
-    const files = filesWithMetadata.files as MulterFile[];
+    const files = filesWithMetadata.files;
     expect(files.length).toBe(2);
 
     util.assertFiles([
@@ -65,7 +65,7 @@ describe('Misc', () => {
       }
 
       const filesWithMetadata = await util.submitForm(parser, form);
-      const files = filesWithMetadata.files as MulterFile[];
+      const files = filesWithMetadata.files;
       expect(files.length).toBe(fileCount);
 
       await util.assertFiles(files.map((file: MulterFile) => [file, 'them-files', 'small']));

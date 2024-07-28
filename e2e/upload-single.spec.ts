@@ -20,7 +20,7 @@ describe('upload.single', () => {
     const req = await util.submitForm(parser, form);
     expect(req.formFields.name).toBe('Multer');
 
-    await util.assertFile(req.file!, 'file', 'small');
+    await util.assertFile(req.file, 'file', 'small');
   });
 
   it('should reject multiple files', async () => {

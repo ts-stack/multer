@@ -14,9 +14,13 @@ export interface ParserFn {
 }
 
 export interface MulterParsedForm {
+  /**
+   * Contains the values of the text fields of the form.
+   */
   formFields: { [key: string]: string };
-  files?: MulterFile[] | MulterFileGroups;
-  file?: MulterFile;
+  groups: MulterFileGroups;
+  files: MulterFile[];
+  file: MulterFile;
 }
 
 export interface SetupOptions {

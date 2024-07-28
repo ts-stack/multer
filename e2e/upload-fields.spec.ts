@@ -2,7 +2,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { MulterFileGroups, ParserFn } from '#lib/types.js';
+import { ParserFn } from '#lib/types.js';
 
 describe('upload.fields', () => {
   let parser: ParserFn;
@@ -20,8 +20,8 @@ describe('upload.fields', () => {
 
     form.append('set-2', util.file('tiny'));
 
-    const req = await util.submitForm(parser, form);
-    const fileGroups = req.files as MulterFileGroups;
+    const parsedForm = await util.submitForm(parser, form);
+    const fileGroups = parsedForm.groups;
     expect(fileGroups['CA$|-|'].length).toBe(0);
     expect(fileGroups['set-1'].length).toBe(0);
     expect(fileGroups['set-2'].length).toBe(1);
@@ -37,8 +37,8 @@ describe('upload.fields', () => {
     form.append('set-1', util.file('empty'));
     form.append('set-2', util.file('tiny'));
 
-    const req = await util.submitForm(parser, form);
-    const fileGroups = req.files as MulterFileGroups;
+    const parsedForm = await util.submitForm(parser, form);
+    const fileGroups = parsedForm.groups;
     expect(fileGroups['CA$|-|'].length).toBe(1);
     expect(fileGroups['set-1'].length).toBe(2);
     expect(fileGroups['set-2'].length).toBe(1);
@@ -62,8 +62,8 @@ describe('upload.fields', () => {
     form.append('set-2', util.file('tiny'));
     form.append('set-2', util.file('empty'));
 
-    const req = await util.submitForm(parser, form);
-    const fileGroups = req.files as MulterFileGroups;
+    const parsedForm = await util.submitForm(parser, form);
+    const fileGroups = parsedForm.groups;
     expect(fileGroups['CA$|-|'].length).toBe(1);
     expect(fileGroups['set-1'].length).toBe(3);
     expect(fileGroups['set-2'].length).toBe(3);

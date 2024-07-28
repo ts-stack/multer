@@ -16,8 +16,8 @@ describe('upload.any', () => {
 
     form.append('test', util.file('tiny'));
 
-    const req = await util.submitForm(parser, form);
-    const files = req.files as MulterFile[];
+    const parsedForm = await util.submitForm(parser, form);
+    const files = parsedForm.files;
     expect(files.length).toBe(1);
 
     await util.assertFile(files[0], 'test', 'tiny');
@@ -32,7 +32,7 @@ describe('upload.any', () => {
     form.append('anyname', util.file('tiny'));
 
     const req = await util.submitForm(parser, form);
-    const files = req.files as MulterFile[];
+    const files = req.files;
     expect(files.length).toBe(4);
 
     await util.assertFiles([
@@ -54,8 +54,8 @@ describe('upload.any', () => {
     form.append('set-1', util.file('tiny'));
     form.append('set-2', util.file('empty'));
 
-    const req = await util.submitForm(parser, form);
-    const files = req.files as MulterFile[];
+    const parsedForm = await util.submitForm(parser, form);
+    const files = parsedForm.files;
     expect(files.length).toBe(7);
 
     await util.assertFiles([

@@ -17,9 +17,9 @@ describe('upload.array', () => {
     form.append('name', 'Multer');
     form.append('files', util.file('small'));
 
-    const req = await util.submitForm(parser, form);
-    const files = req.files as MulterFile[];
-    expect(req.formFields.name).toBe('Multer');
+    const parsedForm = await util.submitForm(parser, form);
+    const files = parsedForm.files;
+    expect(parsedForm.formFields.name).toBe('Multer');
     expect(files.length).toBe(1);
 
     await util.assertFile(files[0], 'files', 'small');
@@ -33,9 +33,9 @@ describe('upload.array', () => {
     form.append('files', util.file('small'));
     form.append('files', util.file('tiny'));
 
-    const req = await util.submitForm(parser, form);
-    const files = req.files as MulterFile[];
-    expect(req.formFields.name).toBe('Multer');
+    const parsedForm = await util.submitForm(parser, form);
+    const files = parsedForm.files;
+    expect(parsedForm.formFields.name).toBe('Multer');
     expect(files.length).toBe(3);
 
     await util.assertFiles([

@@ -18,12 +18,12 @@ describe('upload.none', () => {
     form.append('foo', 'bar');
     form.append('test', 'yes');
 
-    const req = await util.submitForm(parser, form);
-    expect(req.file).toBe(undefined);
-    expect(req.files).toBe(undefined);
+    const parsedForm = await util.submitForm(parser, form);
+    expect(parsedForm.file).toBeUndefined();
+    expect(parsedForm.files).toBeUndefined();
 
-    expect(req.formFields.foo).toBe('bar');
-    expect(req.formFields.test).toBe('yes');
+    expect(parsedForm.formFields.foo).toBe('bar');
+    expect(parsedForm.formFields.test).toBe('yes');
   });
 
   it('should reject single file', async () => {
