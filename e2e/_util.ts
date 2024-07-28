@@ -4,10 +4,10 @@ import { promisify } from 'node:util';
 import FormData from 'form-data';
 
 import hasha from 'hasha';
-import _onFinished from 'on-finished';
 import { MulterFile, MulterParsedForm, MulterParser, Req } from '#lib/types.js';
+import { onFinished as preOnFinished } from '#lib/on-finished.js';
 
-const onFinished = promisify(_onFinished);
+const onFinished = promisify(preOnFinished);
 
 export type FileSize = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
 
