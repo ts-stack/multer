@@ -3,22 +3,22 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterGroup, MulterLimits, ParserFn, Req } from '#lib/types.js';
+import { AnyFn, MulterGroup, MulterLimits, MulterParser, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterGroup[]) {
   return new Multer({ limits }).groups(fields);
 }
 
-function hasCode(parser: ParserFn, form: FormData, code: ErrorMessageCode) {
+function hasCode(parser: MulterParser, form: FormData, code: ErrorMessageCode) {
   return expect(util.submitForm(parser, form)).rejects.toMatchObject({ code });
 }
 
-function hasCodeAndField(parser: ParserFn, form: FormData, code: ErrorMessageCode, field: string) {
+function hasCodeAndField(parser: MulterParser, form: FormData, code: ErrorMessageCode, field: string) {
   return expect(util.submitForm(parser, form)).rejects.toMatchObject({ code, field });
 }
 
-function hasMessage(parser: ParserFn, req: Req, message: string) {
+function hasMessage(parser: MulterParser, req: Req, message: string) {
   return expect(parser(req, req.headers)).rejects.toMatchObject({ message });
 }
 

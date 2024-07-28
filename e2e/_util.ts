@@ -5,7 +5,7 @@ import FormData from 'form-data';
 
 import hasha from 'hasha';
 import _onFinished from 'on-finished';
-import { MulterFile, ParserFn, Req } from '#lib/types.js';
+import { MulterFile, MulterParsedForm, MulterParser, Req } from '#lib/types.js';
 
 const onFinished = promisify(_onFinished);
 
@@ -107,7 +107,7 @@ function getLength(form: FormData) {
   return promisify(form.getLength).call(form);
 }
 
-export async function submitForm(parse: ParserFn, form: FormData) {
+export async function submitForm(parse: MulterParser, form: FormData) {
   const length = await getLength(form);
   const req = new PassThrough() as unknown as Req;
 
@@ -124,9 +124,6 @@ export async function submitForm(parse: ParserFn, form: FormData) {
 
   const result = await parse(req, req.headers);
   await onFinished(req);
-  if (!result) {
-    throw new Error('no parsing!')
-  }
 
-  return result;
+  return result as MulterParsedForm<any, string>;
 }

@@ -6,10 +6,10 @@ import testData from 'testdata-w3c-json-form';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterParsedForm, ParserFn, Req } from '#lib/types.js';
+import { AnyFn, MulterParsedForm, MulterParser, Req } from '#lib/types.js';
 
 describe('body', () => {
-  let parser: ParserFn;
+  let parser: MulterParser;
 
   beforeAll(() => {
     parser = new Multer().none();

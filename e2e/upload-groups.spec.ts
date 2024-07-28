@@ -2,10 +2,12 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { ParserFn } from '#lib/types.js';
+import { MulterParser } from '#lib/types.js';
+
+type groupName = 'set-1' | 'set-2' | 'CA$|-|';
 
 describe('upload.groups', () => {
-  let parser: ParserFn;
+  let parser: MulterParser<any, groupName>;
 
   beforeAll(() => {
     parser = new Multer({ limits: { fileSize: '10MB' } }).groups([

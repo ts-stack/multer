@@ -2,10 +2,10 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { MulterFile, ParserFn } from '#lib/types.js';
+import { MulterFile, MulterParser } from '#lib/types.js';
 
 describe('upload.array', () => {
-  let parser: ParserFn;
+  let parser: MulterParser;
 
   beforeAll(() => {
     parser = new Multer().array('files', 3);
