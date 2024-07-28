@@ -2,7 +2,7 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { MulterFile, MulterParser } from '#lib/types.js';
+import { MulterParser } from '#lib/types.js';
 
 describe('upload.array', () => {
   let parser: MulterParser;

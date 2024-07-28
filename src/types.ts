@@ -24,7 +24,7 @@ export interface MulterParsedForm<F extends object = any, G extends string = str
 }
 
 export interface SetupOptions {
-  fields: MulterGroup[];
+  groups: MulterGroup[];
   limits: NormalizedLimits;
   limitGuard: LimitGuard;
   fileStrategy: Strategy;

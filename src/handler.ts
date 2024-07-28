@@ -8,7 +8,7 @@ import { readBody } from './read-body.js';
 import { AnyFn, SetupOptions, Req, MulterParsedForm } from './types.js';
 
 export function createHandler(setup: AnyFn<SetupOptions>) {
-  return async function multerHandler(
+  return async function requestHandler(
     req: Req,
     headers: IncomingHttpHeaders,
   ): Promise<false | MulterParsedForm | null> {
@@ -28,7 +28,7 @@ export function createHandler(setup: AnyFn<SetupOptions>) {
       appendField(filesWithMetadata.formFields, field.key, field.value);
     }
 
-    const appendFile = createFileAppender(options.fileStrategy, filesWithMetadata, options.fields);
+    const appendFile = createFileAppender(options.fileStrategy, filesWithMetadata, options.groups);
 
     for (const file of result.files) {
       file.stream = fs.createReadStream(file.path);
