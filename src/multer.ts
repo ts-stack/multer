@@ -12,26 +12,27 @@ export class Multer {
   }
 
   /**
-   * Accept a single file with the `name`. The single file will be stored in `req.file`.
+   * Accepts a single file from a form field with the name you pass in the `name` parameter.
+   * The single file will be stored in `parsedForm.file` property.
    */
   single<F extends object = any>(name: string): MulterParser<F, never> {
     return this.handle(this.#limits, [{ name, maxCount: 1 }], 'VALUE');
   }
 
   /**
-   * Accept an array of files, all with the `name`. Optionally error out if
-   * more than `maxCount` files are uploaded. The array of files will be stored in
-   * `req.files`.
+   * Accepts an array of files from a form field with the name you pass in the `name` parameter.
+   * Optionally error out if more than `maxCount` files are uploaded. The array of files will be
+   * stored in `parsedForm.files` property.
    */
   array<F extends object = any>(name: string, maxCount?: number): MulterParser<F, never> {
     return this.handle(this.#limits, [{ name, maxCount }], 'ARRAY');
   }
 
   /**
-   * Accept a mix of files, specified by `fields`. An object with arrays of files
-   * will be stored in `req.files`.
+   * Accepts groups of file arrays with fields of the form you specify with the `group` parameter.
+   * An object with arrays of files will be stored in `parsedForm.groups` property.
    * 
-   * `fields` should be an array of objects with `name` and optionally a `maxCount`.
+   * `groups` should be an array of objects with `name` and optionally a `maxCount`.
    * Example:
    * 
 ```ts
@@ -41,8 +42,8 @@ export class Multer {
 ]
 ```
    */
-  groups<F extends object = any, G extends string = string>(fields: MulterGroup<G>[]): MulterParser<F, G> {
-    return this.handle(this.#limits, fields, 'OBJECT');
+  groups<F extends object = any, G extends string = string>(groups: MulterGroup<G>[]): MulterParser<F, G> {
+    return this.handle(this.#limits, groups, 'OBJECT');
   }
 
   /**
@@ -54,8 +55,8 @@ export class Multer {
   }
 
   /**
-   * Accepts all files that comes over the wire. An array of files will be stored in
-   * `req.files`.
+   * Accepts arrays of files from any form fields, with no limit on the number of files.
+   * An array of files will be stored in `parsedForm.files`.
    *
    * **WARNING:** Make sure that you always handle the files that a user uploads.
    * Never use this method as a global parser since a malicious user could upload
@@ -88,22 +89,22 @@ export class Multer {
 
   protected handle(
     limits: NormalizedLimits,
-    fields: MulterGroup[],
+    groups: MulterGroup[],
     fileStrategy: Strategy,
     withoutGuard?: boolean,
   ) {
     if (withoutGuard) {
       return createHandler(() => ({
-        fields,
+        groups,
         limits,
         limitGuard: () => {},
         fileStrategy,
       }));
     } else {
       return createHandler(() => ({
-        fields,
+        groups,
         limits,
-        limitGuard: createLimitGuard(fields),
+        limitGuard: createLimitGuard(groups),
         fileStrategy,
       }));
     }
