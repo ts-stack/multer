@@ -1,6 +1,6 @@
 export { Multer } from './multer.js';
 export {
-  MulterField,
+  MulterGroup,
   MulterFile,
   MulterLimits,
   MulterOptions,

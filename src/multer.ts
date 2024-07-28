@@ -2,7 +2,7 @@ import bytes from 'bytes';
 
 import { createLimitGuard } from './limit-guard.js';
 import { createHandler } from './handler.js';
-import { Strategy, MulterField, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
+import { Strategy, MulterGroup, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
 
 export class Multer {
   #limits: NormalizedLimits;
@@ -41,7 +41,7 @@ export class Multer {
 ]
 ```
    */
-  groups(fields: MulterField[]) {
+  groups(fields: MulterGroup[]) {
     return this.handle(this.#limits, fields, 'OBJECT');
   }
 
@@ -88,7 +88,7 @@ export class Multer {
 
   protected handle(
     limits: NormalizedLimits,
-    fields: MulterField[],
+    fields: MulterGroup[],
     fileStrategy: Strategy,
     withoutGuard?: boolean,
   ) {

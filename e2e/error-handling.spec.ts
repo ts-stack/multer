@@ -3,10 +3,10 @@ import FormData from 'form-data';
 
 import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
-import { AnyFn, MulterField, MulterLimits, ParserFn, Req } from '#lib/types.js';
+import { AnyFn, MulterGroup, MulterLimits, ParserFn, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
-function withLimits(limits: MulterLimits, fields: MulterField[]) {
+function withLimits(limits: MulterLimits, fields: MulterGroup[]) {
   return new Multer({ limits }).groups(fields);
 }
 

@@ -20,7 +20,7 @@ export interface MulterParsedForm {
 }
 
 export interface SetupOptions {
-  fields: MulterField[];
+  fields: MulterGroup[];
   limits: NormalizedLimits;
   limitGuard: LimitGuard;
   fileStrategy: Strategy;
@@ -92,7 +92,7 @@ export interface MulterOptions {
  * An object describing a field name and the maximum number of files with
  * that field name to accept.
  */
-export interface MulterField {
+export interface MulterGroup {
   /**
    * The field name.
    */

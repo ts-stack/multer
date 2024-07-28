@@ -1,14 +1,14 @@
 import { MulterError } from './error.js';
-import { MulterField, MulterFile } from './types.js';
+import { MulterGroup, MulterFile } from './types.js';
 
-export function createLimitGuard(fields: MulterField[]) {
+export function createLimitGuard(groups: MulterGroup[]) {
   const filesLeft = new Map();
 
-  for (const field of fields) {
-    if (typeof field.maxCount == 'number') {
-      filesLeft.set(field.name, field.maxCount);
+  for (const group of groups) {
+    if (typeof group.maxCount == 'number') {
+      filesLeft.set(group.name, group.maxCount);
     } else {
-      filesLeft.set(field.name, Infinity);
+      filesLeft.set(group.name, Infinity);
     }
   }
 

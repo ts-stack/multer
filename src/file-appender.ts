@@ -1,6 +1,6 @@
-import { MulterFileGroups, Strategy, MulterField, MulterFile } from './types.js';
+import { MulterFileGroups, Strategy, MulterGroup, MulterFile } from './types.js';
 
-export function createFileAppender(strategy: Strategy, obj: { file?: any; files?: any }, fields: MulterField[]) {
+export function createFileAppender(strategy: Strategy, obj: { file?: any; files?: any }, groups: MulterGroup[]) {
   switch (strategy) {
     case 'NONE':
       break;
@@ -18,8 +18,8 @@ export function createFileAppender(strategy: Strategy, obj: { file?: any; files?
   }
 
   if (strategy === 'OBJECT') {
-    for (const field of fields) {
-      (obj.files as MulterFileGroups)[field.name] = [];
+    for (const group of groups) {
+      (obj.files as MulterFileGroups)[group.name] = [];
     }
   }
 
