@@ -7,7 +7,7 @@ import { AnyFn, MulterField, MulterLimits, ParserFn, Req } from '#lib/types.js';
 import { ErrorMessageCode } from '#lib/error.js';
 
 function withLimits(limits: MulterLimits, fields: MulterField[]) {
-  return new Multer({ limits }).fields(fields);
+  return new Multer({ limits }).groups(fields);
 }
 
 function hasCode(parser: ParserFn, form: FormData, code: ErrorMessageCode) {

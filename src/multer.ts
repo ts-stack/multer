@@ -41,7 +41,7 @@ export class Multer {
 ]
 ```
    */
-  fields(fields: MulterField[]) {
+  groups(fields: MulterField[]) {
     return this.handle(this.#limits, fields, 'OBJECT');
   }
 
