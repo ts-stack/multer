@@ -9,6 +9,8 @@ nodemon.json
 CHANGELOG.md
 SECURITY.md
 *.tsbuildinfo
-tsconfig.*
-test
-tests
+e2e
+dist-e2e
+tsconfig.build.json
+tsconfig.e2e.json
+tsconfig.unit.json
