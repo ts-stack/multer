@@ -2,7 +2,7 @@ import bytes from 'bytes';
 
 import { createLimitGuard } from './limit-guard.js';
 import { createHandler } from './handler.js';
-import { Strategy, MulterGroup, MulterLimits, NormalizedLimits, MulterOptions } from './types.js';
+import { Strategy, MulterGroup, MulterLimits, NormalizedLimits, MulterOptions, MulterParser } from './types.js';
 
 export class Multer {
   #limits: NormalizedLimits;
@@ -14,7 +14,7 @@ export class Multer {
   /**
    * Accept a single file with the `name`. The single file will be stored in `req.file`.
    */
-  single(name: string) {
+  single<F extends object = any>(name: string): MulterParser<F, never> {
     return this.handle(this.#limits, [{ name, maxCount: 1 }], 'VALUE');
   }
 
@@ -23,7 +23,7 @@ export class Multer {
    * more than `maxCount` files are uploaded. The array of files will be stored in
    * `req.files`.
    */
-  array(name: string, maxCount?: number) {
+  array<F extends object = any>(name: string, maxCount?: number): MulterParser<F, never> {
     return this.handle(this.#limits, [{ name, maxCount }], 'ARRAY');
   }
 
@@ -41,7 +41,7 @@ export class Multer {
 ]
 ```
    */
-  groups(fields: MulterGroup[]) {
+  groups<F extends object = any, G extends string = string>(fields: MulterGroup<G>[]): MulterParser<F, G> {
     return this.handle(this.#limits, fields, 'OBJECT');
   }
 
@@ -49,7 +49,7 @@ export class Multer {
    * Accept only text fields. If any file upload is made, error with code
    * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `upload.fields([])`.
    */
-  none() {
+  none<F extends object = any>(): MulterParser<F, never> {
     return this.handle(this.#limits, [], 'NONE');
   }
 
@@ -62,7 +62,7 @@ export class Multer {
    * files to a route that you didn't anticipate. Only use this function on routes
    * where you are handling the uploaded files.
    */
-  any() {
+  any<F extends object = any>(): MulterParser<F, never> {
     return this.handle(this.#limits, [], 'ARRAY', true);
   }
 

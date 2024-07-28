@@ -1,24 +1,24 @@
 import { Readable } from 'node:stream';
 import { IncomingHttpHeaders, IncomingMessage, ServerResponse } from 'node:http';
 
-export interface MulterFileGroups {
-  [key: string]: MulterFile[];
+export type MulterFileGroups<G extends string = string> = {
+  [key in G]: MulterFile[];
 }
 export type Req = IncomingMessage;
 export type Res = ServerResponse;
 export type AnyFn<T = any> = (...args: any[]) => T;
 export type Strategy = 'NONE' | 'VALUE' | 'ARRAY' | 'OBJECT';
 
-export interface ParserFn {
-  (req: Req, headers: IncomingHttpHeaders): Promise<false | MulterParsedForm | null>;
+export interface MulterParser<F extends object = any, G extends string = string> {
+  (req: Req, headers: IncomingHttpHeaders): Promise<false | MulterParsedForm<F, G> | null>;
 }
 
-export interface MulterParsedForm {
+export interface MulterParsedForm<F extends object = any, G extends string = string> {
   /**
    * Contains the values of the text fields of the form.
    */
-  formFields: { [key: string]: string };
-  groups: MulterFileGroups;
+  formFields: F;
+  groups: MulterFileGroups<G>;
   files: MulterFile[];
   file: MulterFile;
 }
@@ -96,11 +96,11 @@ export interface MulterOptions {
  * An object describing a field name and the maximum number of files with
  * that field name to accept.
  */
-export interface MulterGroup {
+export interface MulterGroup<G extends string = string> {
   /**
    * The field name.
    */
-  name: string;
+  name: G;
   /**
    * Optional maximum number of files per field to accept. (Default: Infinity).
    */
