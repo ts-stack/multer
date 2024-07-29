@@ -60,11 +60,11 @@ app.post('/photos/upload', async (req, res, next) => {
 
 app.post('/cool-profile', async (req, res, next) => {
   const parsedForm = await parseGroups(req, req.headers);
-  // parsedForm.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+  // parsedForm.groups is an object (String -> Array) where fieldname is the key, and the value is array of files
   //
   // e.g.
-  //  parsedForm.files['avatar'][0] -> File
-  //  parsedForm.files['gallery'] -> Array
+  //  parsedForm.groups['avatar'][0] -> File
+  //  parsedForm.groups['gallery'] -> Array
   //
   // parsedForm.formFields will contain the text fields, if there were any
 });
