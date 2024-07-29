@@ -12,14 +12,16 @@ npm install @ts-stack/multer
 
 ## Usage
 
-Multer returns an object with four properties: `formFields`, `file`, `files` and `groups`. The `formFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files uploaded via the form.
+Multer returns an object with four properties: `formFields`, `file`, `files` and `groups`. The `formFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files (as `Readable` stream) uploaded via the form.
 
 The following example uses ExpressJS only for simplicity. In fact, `@ts-stack/multer` does not return middleware, so it is less convenient for ExpressJS than the [original module][0]. Basic usage example:
 
 ```ts
 import { Multer } from '@ts-stack/multer';
 import express from 'express';
+import { createWriteStream } from 'node:fs';
 
+// Here `avatar`, `photos` and `gallery` - is the names of the field in the HTML form.
 const multer = new Multer({ limits: { fileSize: '10MB' } });
 const parseAvatar = multer.single('avatar');
 const parsePhotos = multer.array('photos', 12);
@@ -30,12 +32,30 @@ app.post('/profile', async (req, res, next) => {
   const parsedForm = await parseAvatar(req, req.headers);
   // parsedForm.file is the `avatar` file
   // parsedForm.formFields will hold the text fields, if there were any
+  const path = `uploaded-files/${parsedForm.file.originalName}`;
+  const writableStream = createWriteStream(path);
+  parsedForm.file.stream.pipe(writableStream);
+  // ...
 });
 
 app.post('/photos/upload', async (req, res, next) => {
   const parsedForm = await parsePhotos(req, req.headers);
   // parsedForm.files is array of `photos` files
   // parsedForm.formFields will contain the text fields, if there were any
+  const promises: Promise<void>[] = [];
+  parsedForm.files.forEach((file) => {
+    const promise = new Promise<void>((resolve, reject) => {
+      const path = `uploaded-files/${file.originalName}`;
+      const writableStream = createWriteStream(path);
+      file.stream.pipe(writableStream);
+      writableStream.on('finish', resolve);
+      writableStream.on('error', reject);
+    });
+    promises.push(promise);
+  });
+
+  await Promise.all(promises);
+  // ...
 });
 
 app.post('/cool-profile', async (req, res, next) => {
@@ -63,6 +83,40 @@ app.post('/profile', async (req, res, next) => {
   const parsedForm = await parseFormFields(req, req.headers);
   // parsedForm.formFields contains the text fields
 });
+```
+
+## Error handling
+
+This is a list of error codes:
+
+```ts
+const errorMessages = new Map<ErrorMessageCode, string>([
+  ['CLIENT_ABORTED', 'Client aborted'],
+  ['LIMIT_FILE_SIZE', 'File too large'],
+  ['LIMIT_FILE_COUNT', 'Too many files'],
+  ['LIMIT_FIELD_KEY', 'Field name too long'],
+  ['LIMIT_FIELD_VALUE', 'Field value too long'],
+  ['LIMIT_FIELD_COUNT', 'Too many fields'],
+  ['LIMIT_UNEXPECTED_FILE', 'Unexpected file field'],
+]);
+```
+
+You can see these error codes in the `MulterError#code` property:
+
+```ts
+import { Multer, MulterError, ErrorMessageCode } from '@ts-stack/multer';
+
+// ...
+try {
+  const multer = new Multer().single('avatar');
+  const parsedForm = await multer(req, req.headers);
+  // ...
+} catch (err) {
+  if (err instanceof MulterError) {
+    err.code // This property is of type ErrorMessageCode.
+    // ...
+  }
+}
 ```
 
 [0]: https://github.com/expressjs/multer/tree/v2.0.0-rc.4
