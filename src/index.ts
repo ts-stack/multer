@@ -1,4 +1,5 @@
 export { Multer } from './multer.js';
+export { ErrorMessageCode, MulterError } from './error.js';
 export {
   MulterFile,
   MulterGroup,
