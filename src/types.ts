@@ -83,7 +83,7 @@ export interface NormalizedLimits extends MulterLimits {
 /**
  * Options for initializing a Multer instance.
  */
-export interface MulterOptions {
+export class MulterOptions {
   /**
    * An object specifying the size limits of the optional properties.
    * Multer passes this object into busboy directly, and the details of the properties
