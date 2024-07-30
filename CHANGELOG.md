@@ -1,5 +1,12 @@
+<a name="1.0.0-beta.4"></a>
+# [1.0.0-beta.4](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.4) (2024-07-30)
+
+### Breaking chages
+
+- Now `maxCount` limit has precedence over `limits.files`.
+
 <a name="1.0.0-beta.3"></a>
-# [1.0.0-beta.3](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.3) (2024-07-30)
+## [1.0.0-beta.3](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.3) (2024-07-30)
 
 ### Bug fix
 
