@@ -4,14 +4,14 @@ import { promisify } from 'node:util';
 import FormData from 'form-data';
 
 import hasha from 'hasha';
-import { MulterFile, MulterParsedForm, MulterParser, Req } from '#lib/types.js';
+import { MulterFile, MulterParsedForm, MulterParser } from '#lib/types.js';
 import { onFinished as preOnFinished } from '#lib/on-finished.js';
 
 const onFinished = promisify(preOnFinished);
 
-export type FileSize = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
+export type FileName = 'empty' | 'tiny' | 'small' | 'medium' | 'large';
 
-const files = new Map<FileSize, Partial<MulterFile>>([
+const files = new Map<FileName, Partial<MulterFile>>([
   [
     'empty',
     {
@@ -69,15 +69,15 @@ const files = new Map<FileSize, Partial<MulterFile>>([
   ],
 ]);
 
-export function file(name: FileSize) {
+export function file(name: FileName) {
   return fs.createReadStream(new URL(`../e2e/files/${name}${files.get(name)!.extension}`, import.meta.url));
 }
 
-export function knownFileLength(name: FileSize) {
+export function knownFileLength(name: FileName) {
   return files.get(name)!.size;
 }
 
-export async function assertFile(file: MulterFile, fieldName: string, fileName: FileSize) {
+export async function assertFile(file: MulterFile, fieldName: string, fileName: FileName) {
   if (!files.has(fileName)) {
     throw new Error(`No file named "${fileName}"`);
   }
@@ -99,7 +99,7 @@ export async function assertFile(file: MulterFile, fieldName: string, fileName: 
   expect(hash).toBe(expected.hash);
 }
 
-export async function assertFiles(files: [MulterFile, string, FileSize][]) {
+export async function assertFiles(files: [MulterFile, string, FileName][]) {
   await Promise.all(files.map((args) => assertFile(args[0], args[1], args[2])));
 }
 
