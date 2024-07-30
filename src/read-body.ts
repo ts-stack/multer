@@ -4,9 +4,9 @@ import { promisify } from 'node:util';
 import { createWriteStream } from 'node:fs';
 import { Busboy } from '@fastify/busboy';
 import { temporaryFile } from 'tempy';
-import FileType from 'stream-file-type';
 import { IncomingHttpHeaders } from 'node:http';
 
+import { FileType } from './stream-file-type.js';
 import { MulterError } from './error.js';
 import { MulterFile, LimitGuard, NormalizedLimits } from './types.js';
 import { onFinished as preOnFinished } from './on-finished.js';
@@ -83,7 +83,7 @@ function collectFiles(busboy: Busboy, limits: NormalizedLimits, limitGuard: Limi
           file.size = target.bytesWritten;
 
           const fileType = await detector.fileTypePromise();
-          file.detectedMimeType = fileType ? fileType.mime : null;
+          file.detectedMimeType = fileType?.mime ?? null;
           file.detectedFileExtension = fileType ? `.${fileType.ext}` : '';
 
           return file;
@@ -97,7 +97,12 @@ function collectFiles(busboy: Busboy, limits: NormalizedLimits, limitGuard: Limi
   });
 }
 
-export async function readBody(req: Readable, headers: IncomingHttpHeaders, limits: NormalizedLimits, limitGuard: LimitGuard) {
+export async function readBody(
+  req: Readable,
+  headers: IncomingHttpHeaders,
+  limits: NormalizedLimits,
+  limitGuard: LimitGuard,
+) {
   const busboy = new Busboy({ headers: headers as any, limits: limits });
 
   const promiseFields = collectFields(busboy, limits);
