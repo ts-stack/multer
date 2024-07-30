@@ -22,9 +22,9 @@ describe('body', () => {
     form.append('key', 'value');
     form.append('abc', 'xyz');
 
-    const filesWithMetadata = await util.submitForm(parser, form);
+    const parsedForm = await util.submitForm(parser, form);
 
-    expect(filesWithMetadata.formFields).toMatchObject({
+    expect(parsedForm.formFields).toMatchObject({
       name: 'Multer',
       key: 'value',
       abc: 'xyz',
@@ -44,9 +44,9 @@ describe('body', () => {
     form.append('checkboxempty', '');
     form.append('checkboxempty', '');
 
-    const filesWithMetadata = await util.submitForm(parser, form);
+    const parsedForm = await util.submitForm(parser, form);
 
-    expect(filesWithMetadata.formFields).toMatchObject({
+    expect(parsedForm.formFields).toMatchObject({
       name: 'Multer',
       key: '',
       abc: '',
@@ -66,10 +66,10 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    const filesWithMetadata = await parser(req, req.headers) as MulterParsedForm;
+    const parsedForm = await parser(req, req.headers) as MulterParsedForm;
 
-    expect(filesWithMetadata.formFields).toBeUndefined();
-    expect(filesWithMetadata.files).toBeUndefined();
+    expect(parsedForm.formFields).toBeUndefined();
+    expect(parsedForm.files).toBeUndefined();
   });
 
   it('should not process non-multipart GET request', async () => {
@@ -82,10 +82,10 @@ describe('body', () => {
       'content-length': '11',
     };
 
-    const filesWithMetadata = await parser(req, req.headers) as MulterParsedForm;
+    const parsedForm = await parser(req, req.headers) as MulterParsedForm;
 
-    expect(filesWithMetadata.formFields).toBeUndefined();
-    expect(filesWithMetadata.files).toBeUndefined();
+    expect(parsedForm.formFields).toBeUndefined();
+    expect(parsedForm.files).toBeUndefined();
   });
 
   for (const test of testData) {
@@ -96,9 +96,9 @@ describe('body', () => {
         form.append(field.key, field.value);
       }
 
-      const filesWithMetadata = await util.submitForm(parser, form);
+      const parsedForm = await util.submitForm(parser, form);
 
-      expect(filesWithMetadata.formFields).toMatchObject(test.expected);
+      expect(parsedForm.formFields).toMatchObject(test.expected);
     });
   }
 
@@ -109,9 +109,9 @@ describe('body', () => {
     form.append('obj[2]', 'c');
     form.append('obj[x]', 'yz');
 
-    const filesWithMetadata = await util.submitForm(parser, form);
+    const parsedForm = await util.submitForm(parser, form);
 
-    expect(filesWithMetadata.formFields).toMatchObject({
+    expect(parsedForm.formFields).toMatchObject({
       obj: {
         0: 'a',
         2: 'c',

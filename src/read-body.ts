@@ -44,22 +44,22 @@ function collectFiles(busboy: Busboy, limits: NormalizedLimits, limitGuard: Limi
   return new Promise<MulterFile[]>((resolve, reject) => {
     const result: Promise<MulterFile>[] = [];
 
-    busboy.on('file', async (fieldname, fileStream, filename, encoding, mimetype) => {
+    busboy.on('file', async (fieldName, fileStream, filename, encoding, mimetype) => {
       // Catch all errors on file stream
       fileStream.on('error', reject);
 
       // Catch limit exceeded on file stream
       fileStream.on('limit', () => {
-        reject(new MulterError('LIMIT_FILE_SIZE', fieldname));
+        reject(new MulterError('LIMIT_FILE_SIZE', fieldName));
       });
 
       // Work around bug in Busboy (https://github.com/mscdex/busboy/issues/6)
-      if (limits?.fieldNameSize !== undefined && fieldname.length > limits.fieldNameSize) {
+      if (limits?.fieldNameSize !== undefined && fieldName.length > limits.fieldNameSize) {
         return reject(new MulterError('LIMIT_FIELD_KEY'));
       }
 
       const file = {
-        fieldName: fieldname,
+        fieldName,
         originalName: filename,
         clientReportedMimeType: mimetype,
         clientReportedFileExtension: extname(filename || ''),
@@ -67,7 +67,7 @@ function collectFiles(busboy: Busboy, limits: NormalizedLimits, limitGuard: Limi
 
       try {
         limitGuard(file);
-      } catch (err) {
+      } catch (err: any) {
         return reject(err);
       }
 

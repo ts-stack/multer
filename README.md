@@ -108,8 +108,8 @@ import { Multer, MulterError, ErrorMessageCode } from '@ts-stack/multer';
 
 // ...
 try {
-  const multer = new Multer().single('avatar');
-  const parsedForm = await multer(req, req.headers);
+  const parse = new Multer().single('avatar');
+  const parsedForm = await parse(req, req.headers);
   // ...
 } catch (err) {
   if (err instanceof MulterError) {

@@ -22,14 +22,14 @@ export function createHandler(setup: AnyFn<SetupOptions>) {
     const options = setup();
     const result = await readBody(req, headers, options.limits, options.limitGuard);
 
-    const filesWithMetadata = Object.create(null) as MulterParsedForm;
-    filesWithMetadata.formFields = Object.create(null);
+    const parsedForm = Object.create(null) as MulterParsedForm;
+    parsedForm.formFields = Object.create(null);
 
     for (const field of result.fields) {
-      appendField(filesWithMetadata.formFields, field.key, field.value);
+      appendField(parsedForm.formFields, field.key, field.value);
     }
 
-    const appendFile = createFileAppender(options.fileStrategy, filesWithMetadata, options.groups);
+    const appendFile = createFileAppender(options.fileStrategy, parsedForm, options.groups);
 
     for (const file of result.files) {
       file.stream = fs.createReadStream(file.path);
@@ -38,6 +38,6 @@ export function createHandler(setup: AnyFn<SetupOptions>) {
       appendFile(file);
     }
 
-    return filesWithMetadata;
+    return parsedForm;
   };
 }
