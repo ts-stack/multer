@@ -74,10 +74,10 @@ export interface MulterLimits {
   headerPairs?: number;
 }
 
-export interface NormalizedLimits extends MulterLimits {
-  fieldNameSize?: number;
-  fieldSize?: number;
-  fileSize?: number;
+export interface NormalizedLimits extends Required<MulterLimits> {
+  fieldNameSize: number;
+  fieldSize: number;
+  fileSize: number;
 }
 
 /**
