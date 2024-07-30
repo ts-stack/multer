@@ -81,6 +81,27 @@ describe('upload.groups', () => {
     ]);
   });
 
+  it('"maxCount" limit must take precedence over "limits.files"', async () => {
+    const form = new FormData();
+    const parser = new Multer({ limits: { files: 1 } }).groups([
+      { name: 'set-1', maxCount: 3 },
+    ]);
+
+    form.append('set-1', util.file('tiny'));
+    form.append('set-1', util.file('empty'));
+    form.append('set-1', util.file('tiny'));
+
+    const parsedForm = await util.submitForm(parser, form);
+    const fileGroups = parsedForm.groups;
+    expect(fileGroups['set-1'].length).toBe(3);
+
+    await util.assertFiles([
+      [fileGroups['set-1'][0], 'set-1', 'tiny'],
+      [fileGroups['set-1'][1], 'set-1', 'empty'],
+      [fileGroups['set-1'][2], 'set-1', 'tiny'],
+    ]);
+  });
+
   it('should reject too many files', async () => {
     const form = new FormData();
 

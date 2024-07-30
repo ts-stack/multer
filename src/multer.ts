@@ -23,9 +23,17 @@ export class Multer {
    * Accepts an array of files from a form field with the name you pass in the `name` parameter.
    * Optionally error out if more than `maxCount` files are uploaded. The array of files will be
    * stored in `parsedForm.files` property.
+   * 
+   * __Note__: `maxCount` limit has precedence over `limits.files`.
    */
   array<F extends object = any>(name: string, maxCount?: number): MulterParser<F, never> {
-    return this.handle(this.#limits, [{ name, maxCount }], 'ARRAY');
+    const limits = { ...this.#limits };
+    maxCount ??= limits.files;
+    if (maxCount >= limits.files) {
+      // Allows multer limit guards to work instead of busboy limit guards.
+      limits.files = maxCount + 1;
+    }
+    return this.handle(limits, [{ name, maxCount }], 'ARRAY');
   }
 
   /**
@@ -41,9 +49,20 @@ export class Multer {
   { name: 'gallery', maxCount: 8 }
 ]
 ```
+   * 
+   * __Note__: `maxCount` limit has precedence over `limits.files`.
    */
   groups<F extends object = any, G extends string = string>(groups: MulterGroup<G>[]): MulterParser<F, G> {
-    return this.handle(this.#limits, groups, 'OBJECT');
+    const limits = { ...this.#limits };
+    limits.files = groups.reduce((prev, curr) => {
+      return prev + (curr.maxCount || 0);
+    }, 0);
+    limits.files = limits.files || this.#limits.files;
+    if (limits.files >= this.#limits.files) {
+      // Allows multer limit guards to work instead of busboy limit guards.
+      limits.files++;
+    }
+    return this.handle(limits, groups, 'OBJECT');
   }
 
   /**
@@ -87,12 +106,7 @@ export class Multer {
     return value;
   }
 
-  protected handle(
-    limits: NormalizedLimits,
-    groups: MulterGroup[],
-    fileStrategy: Strategy,
-    withoutGuard?: boolean,
-  ) {
+  protected handle(limits: NormalizedLimits, groups: MulterGroup[], fileStrategy: Strategy, withoutGuard?: boolean) {
     if (withoutGuard) {
       return createHandler(() => ({
         groups,

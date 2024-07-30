@@ -45,6 +45,28 @@ describe('upload.array', () => {
     ]);
   });
 
+  it('"maxCount" limit must take precedence over "limits.files"', async () => {
+    const form = new FormData();
+    const parser = new Multer({ limits: { files: 3 } }).array('files', 4);
+
+    form.append('name', 'Multer');
+    form.append('files', util.file('empty'));
+    form.append('files', util.file('small'));
+    form.append('files', util.file('tiny'));
+    form.append('files', util.file('tiny'));
+
+    const { files, formFields } = await util.submitForm(parser, form);
+    expect(formFields.name).toBe('Multer');
+    expect(files.length).toBe(4);
+
+    await util.assertFiles([
+      [files[0], 'files', 'empty'],
+      [files[1], 'files', 'small'],
+      [files[2], 'files', 'tiny'],
+      [files[2], 'files', 'tiny'],
+    ]);
+  });
+
   it('should reject too many files', async () => {
     const form = new FormData();
 
