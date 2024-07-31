@@ -1,5 +1,12 @@
+<a name="1.0.0-beta.5"></a>
+# [1.0.0-beta.5](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.5) (2024-07-31)
+
+### Breaking chages
+
+- Renamed `MulterParsedForm#formFields` to `MulterParsedForm#textFields`.
+
 <a name="1.0.0-beta.4"></a>
-# [1.0.0-beta.4](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.4) (2024-07-30)
+## [1.0.0-beta.4](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.4) (2024-07-30)
 
 ### Breaking chages
 
