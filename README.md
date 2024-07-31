@@ -25,7 +25,10 @@ import { createWriteStream } from 'node:fs';
 const multer = new Multer({ limits: { fileSize: '10MB' } });
 const parseAvatar = multer.single('avatar');
 const parsePhotos = multer.array('photos', 12);
-const parseGroups = multer.groups([{ name: 'avatar', maxCount: 1 }, { name: 'gallery', maxCount: 8 }]);
+const parseGroups = multer.groups([
+  { name: 'avatar', maxCount: 1 },
+  { name: 'gallery', maxCount: 8 },
+]);
 const app = express();
 
 app.post('/profile', async (req, res, next) => {
@@ -113,7 +116,7 @@ try {
   // ...
 } catch (err) {
   if (err instanceof MulterError) {
-    err.code // This property is of type ErrorMessageCode.
+    err.code; // This property is of type ErrorMessageCode.
     // ...
   }
 }
