@@ -12,7 +12,7 @@ npm install @ts-stack/multer
 
 ## Usage
 
-Multer returns an object with four properties: `formFields`, `file`, `files` and `groups`. The `formFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files (as `Readable` stream) uploaded via the form.
+Multer returns an object in Promise with four properties: `formFields`, `file`, `files` and `groups`. The `formFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files (as `Readable` stream) uploaded via the form.
 
 The following example uses ExpressJS only for simplicity. In fact, `@ts-stack/multer` does not return middleware, so it is less convenient for ExpressJS than the [original module][0]. Basic usage example:
 

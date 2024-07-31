@@ -1,4 +1,4 @@
-import { MulterFileGroups, Strategy, MulterGroup, MulterFile, MulterParsedForm } from './types.js';
+import { Strategy, MulterGroup, MulterFile, MulterParsedForm } from './types.js';
 
 export function createFileAppender(strategy: Strategy, obj: MulterParsedForm, groups: MulterGroup[]) {
   switch (strategy) {
