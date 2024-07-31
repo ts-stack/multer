@@ -17,7 +17,7 @@ export interface MulterParsedForm<F extends object = any, G extends string = str
   /**
    * Contains the values of the text fields of the form.
    */
-  formFields: F;
+  textFields: F;
   groups: MulterFileGroups<G>;
   files: MulterFile[];
   file: MulterFile;

@@ -19,7 +19,7 @@ describe('upload.array', () => {
 
     const parsedForm = await util.submitForm(parser, form);
     const files = parsedForm.files;
-    expect(parsedForm.formFields.name).toBe('Multer');
+    expect(parsedForm.textFields.name).toBe('Multer');
     expect(files.length).toBe(1);
 
     await util.assertFile(files[0], 'files', 'small');
@@ -35,7 +35,7 @@ describe('upload.array', () => {
 
     const parsedForm = await util.submitForm(parser, form);
     const files = parsedForm.files;
-    expect(parsedForm.formFields.name).toBe('Multer');
+    expect(parsedForm.textFields.name).toBe('Multer');
     expect(files.length).toBe(3);
 
     await util.assertFiles([
@@ -55,8 +55,8 @@ describe('upload.array', () => {
     form.append('files', util.file('tiny'));
     form.append('files', util.file('tiny'));
 
-    const { files, formFields } = await util.submitForm(parser, form);
-    expect(formFields.name).toBe('Multer');
+    const { files, textFields } = await util.submitForm(parser, form);
+    expect(textFields.name).toBe('Multer');
     expect(files.length).toBe(4);
 
     await util.assertFiles([

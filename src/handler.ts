@@ -23,10 +23,10 @@ export function createHandler(setup: AnyFn<SetupOptions>) {
     const result = await readBody(req, headers, options.limits, options.limitGuard);
 
     const parsedForm = Object.create(null) as MulterParsedForm;
-    parsedForm.formFields = Object.create(null);
+    parsedForm.textFields = Object.create(null);
 
     for (const field of result.fields) {
-      appendField(parsedForm.formFields, field.key, field.value);
+      appendField(parsedForm.textFields, field.key, field.value);
     }
 
     const appendFile = createFileAppender(options.fileStrategy, parsedForm, options.groups);

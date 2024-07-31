@@ -22,8 +22,8 @@ describe('upload.none', () => {
     expect(parsedForm.file).toBeUndefined();
     expect(parsedForm.files).toBeUndefined();
 
-    expect(parsedForm.formFields.foo).toBe('bar');
-    expect(parsedForm.formFields.test).toBe('yes');
+    expect(parsedForm.textFields.foo).toBe('bar');
+    expect(parsedForm.textFields.test).toBe('yes');
   });
 
   it('should reject single file', async () => {

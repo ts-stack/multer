@@ -12,7 +12,7 @@ npm install @ts-stack/multer
 
 ## Usage
 
-Multer returns an object in Promise with four properties: `formFields`, `file`, `files` and `groups`. The `formFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files (as `Readable` stream) uploaded via the form.
+Multer returns an object in Promise with four properties: `textFields`, `file`, `files` and `groups`. The `textFields` object contains the values of the text fields of the form, the `file`, `files` or `groups` object contains the files (as `Readable` stream) uploaded via the form.
 
 The following example uses ExpressJS only for simplicity. In fact, `@ts-stack/multer` does not return middleware, so it is less convenient for ExpressJS than the [original module][0]. Basic usage example:
 
@@ -34,7 +34,7 @@ const app = express();
 app.post('/profile', async (req, res, next) => {
   const parsedForm = await parseAvatar(req, req.headers);
   // parsedForm.file is the `avatar` file
-  // parsedForm.formFields will hold the text fields, if there were any
+  // parsedForm.textFields will hold the text fields, if there were any
   const path = `uploaded-files/${parsedForm.file.originalName}`;
   const writableStream = createWriteStream(path);
   parsedForm.file.stream.pipe(writableStream);
@@ -44,7 +44,7 @@ app.post('/profile', async (req, res, next) => {
 app.post('/photos/upload', async (req, res, next) => {
   const parsedForm = await parsePhotos(req, req.headers);
   // parsedForm.files is array of `photos` files
-  // parsedForm.formFields will contain the text fields, if there were any
+  // parsedForm.textFields will contain the text fields, if there were any
   const promises: Promise<void>[] = [];
   parsedForm.files.forEach((file) => {
     const promise = new Promise<void>((resolve, reject) => {
@@ -69,7 +69,7 @@ app.post('/cool-profile', async (req, res, next) => {
   //  parsedForm.groups['avatar'][0] -> File
   //  parsedForm.groups['gallery'] -> Array
   //
-  // parsedForm.formFields will contain the text fields, if there were any
+  // parsedForm.textFields will contain the text fields, if there were any
 });
 ```
 
@@ -84,7 +84,7 @@ const app = express();
 
 app.post('/profile', async (req, res, next) => {
   const parsedForm = await parseFormFields(req, req.headers);
-  // parsedForm.formFields contains the text fields
+  // parsedForm.textFields contains the text fields
 });
 ```
 

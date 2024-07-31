@@ -18,7 +18,7 @@ describe('upload.single', () => {
     form.append('file', util.file('small'));
 
     const req = await util.submitForm(parser, form);
-    expect(req.formFields.name).toBe('Multer');
+    expect(req.textFields.name).toBe('Multer');
 
     await util.assertFile(req.file, 'file', 'small');
   });

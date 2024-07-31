@@ -24,7 +24,7 @@ describe('body', () => {
 
     const parsedForm = await util.submitForm(parser, form);
 
-    expect(parsedForm.formFields).toMatchObject({
+    expect(parsedForm.textFields).toMatchObject({
       name: 'Multer',
       key: 'value',
       abc: 'xyz',
@@ -46,7 +46,7 @@ describe('body', () => {
 
     const parsedForm = await util.submitForm(parser, form);
 
-    expect(parsedForm.formFields).toMatchObject({
+    expect(parsedForm.textFields).toMatchObject({
       name: 'Multer',
       key: '',
       abc: '',
@@ -68,7 +68,7 @@ describe('body', () => {
 
     const parsedForm = await parser(req, req.headers) as MulterParsedForm;
 
-    expect(parsedForm.formFields).toBeUndefined();
+    expect(parsedForm.textFields).toBeUndefined();
     expect(parsedForm.files).toBeUndefined();
   });
 
@@ -84,7 +84,7 @@ describe('body', () => {
 
     const parsedForm = await parser(req, req.headers) as MulterParsedForm;
 
-    expect(parsedForm.formFields).toBeUndefined();
+    expect(parsedForm.textFields).toBeUndefined();
     expect(parsedForm.files).toBeUndefined();
   });
 
@@ -98,7 +98,7 @@ describe('body', () => {
 
       const parsedForm = await util.submitForm(parser, form);
 
-      expect(parsedForm.formFields).toMatchObject(test.expected);
+      expect(parsedForm.textFields).toMatchObject(test.expected);
     });
   }
 
@@ -111,7 +111,7 @@ describe('body', () => {
 
     const parsedForm = await util.submitForm(parser, form);
 
-    expect(parsedForm.formFields).toMatchObject({
+    expect(parsedForm.textFields).toMatchObject({
       obj: {
         0: 'a',
         2: 'c',
