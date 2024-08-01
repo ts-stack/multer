@@ -50,9 +50,9 @@ app.post('/photos/upload', async (req, res, next) => {
     const promise = new Promise<void>((resolve, reject) => {
       const path = `uploaded-files/${file.originalName}`;
       const writableStream = createWriteStream(path);
-      file.stream.pipe(writableStream);
-      writableStream.on('finish', resolve);
       writableStream.on('error', reject);
+      writableStream.on('finish', resolve);
+      file.stream.pipe(writableStream);
     });
     promises.push(promise);
   });
