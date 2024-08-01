@@ -103,7 +103,7 @@ export async function readBody(
   limits: NormalizedLimits,
   limitGuard: LimitGuard,
 ) {
-  const busboy = new Busboy({ headers: headers as any, limits: limits });
+  const busboy = new Busboy({ headers: headers as any, limits });
 
   const promiseFields = collectFields(busboy, limits);
   const promiseFiles = collectFiles(busboy, limits, limitGuard);

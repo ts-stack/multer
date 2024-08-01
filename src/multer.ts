@@ -66,8 +66,8 @@ export class Multer {
   }
 
   /**
-   * Accept only text fields. If any file upload is made, error with code
-   * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `upload.fields([])`.
+   * Accept only text (non-file) fields. If any file upload is made, error with code
+   * `LIMIT_UNEXPECTED_FILE` will be issued. This is the same as doing `parse.groups([])`.
    */
   textFields<F extends object = any>(): MulterParser<F, never> {
     return this.handle(this.#limits, [], 'NONE');

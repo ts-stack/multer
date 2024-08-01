@@ -57,7 +57,7 @@ export interface MulterLimits {
    */
   fieldSize?: number | string;
   /**
-   * Max number of fields per request. (Default `1000`)
+   * Max number of non-file fields per request. (Default `1000`)
    */
   fields?: number;
   /**
