@@ -4,16 +4,16 @@ import * as util from './_util.js';
 import { Multer } from '#lib/multer.js';
 import { MulterParser } from '#lib/types.js';
 
-describe('upload.none', () => {
+describe('upload.textFields', () => {
   let parser: MulterParser;
 
   beforeAll(() => {
-    parser = new Multer().none();
+    parser = new Multer().textFields();
   });
 
   it('should handle text fields', async () => {
     const form = new FormData();
-    const parser = new Multer().none();
+    const parser = new Multer().textFields();
 
     form.append('foo', 'bar');
     form.append('test', 'yes');

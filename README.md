@@ -73,13 +73,13 @@ app.post('/cool-profile', async (req, res, next) => {
 });
 ```
 
-In case you need to handle a text-only multipart form, you can use the `.none()` method, example:
+In case you need to handle a text-only multipart form, you can use the `.textFields()` method, example:
 
 ```ts
 import { Multer } from '@ts-stack/multer';
 import express from 'express';
 
-const parseFormFields = new Multer().none();
+const parseFormFields = new Multer().textFields();
 const app = express();
 
 app.post('/profile', async (req, res, next) => {

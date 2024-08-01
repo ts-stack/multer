@@ -12,7 +12,7 @@ describe('body', () => {
   let parser: MulterParser;
 
   beforeAll(() => {
-    parser = new Multer().none();
+    parser = new Multer().textFields();
   });
 
   it('should process multiple fields', async () => {
