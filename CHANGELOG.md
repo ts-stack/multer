@@ -1,5 +1,12 @@
+<a name="1.0.0-beta.6"></a>
+# [1.0.0-beta.6](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.6) (2024-08-01)
+
+### Breaking chages
+
+- Renamed `Multer#none` to `Multer#textFields`.
+
 <a name="1.0.0-beta.5"></a>
-# [1.0.0-beta.5](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.5) (2024-07-31)
+## [1.0.0-beta.5](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.5) (2024-07-31)
 
 ### Breaking chages
 
