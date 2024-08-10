@@ -1,6 +1,6 @@
 {
   "name": "@ts-stack/multer",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0",
   "type": "module",
   "description": "Multer is a node.js parser for handling `multipart/form-data`, which is primarily used for uploading files.",
   "license": "MIT",
