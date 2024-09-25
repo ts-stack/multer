@@ -44,7 +44,7 @@
     "prettier": "^3.3.3",
     "testdata-w3c-json-form": "^1.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "~5.5.4"
   },
   "engines": {
     "node": ">=20.0.6"
