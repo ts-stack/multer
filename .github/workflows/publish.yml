@@ -25,10 +25,13 @@ jobs:
           node-version: 24
           registry-url: "https://registry.npmjs.org"
 
-      - name: Run scripts
+      - name: Enable Corepack
         run: |
           corepack enable
           corepack install
+
+      - name: Run scripts
+        run: |
           yarn install --immutable
           yarn build
           yarn test
