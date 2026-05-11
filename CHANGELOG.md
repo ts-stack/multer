@@ -1,5 +1,12 @@
+<a name="1.0.1"></a>
+# [1.0.1](https://github.com/ts-stack/multer/releases/tag/1.0.1) (2026-05-11)
+
+### Update deps
+
+- Update deps.
+
 <a name="1.0.0-beta.6"></a>
-# [1.0.0-beta.6](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.6) (2024-08-01)
+## [1.0.0-beta.6](https://github.com/ts-stack/multer/releases/tag/1.0.0-beta.6) (2024-08-01)
 
 ### Breaking chages
 
