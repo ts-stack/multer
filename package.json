@@ -30,13 +30,11 @@
     "tempy": "^3.2.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/bytes": "^3.1.5",
-    "@types/eslint": "^9.6.1",
     "@types/jest": "^30.0.0",
     "@types/node": "^25.6.2",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
-    "@typescript-eslint/parser": "^8.59.2",
-    "eslint": "^10.3.0",
+    "eslint": "^10.5.0",
     "form-data": "^4.0.5",
     "get-stream": "^9.0.1",
     "hasha": "^5.2.0",
@@ -44,10 +42,11 @@
     "prettier": "^3.8.3",
     "testdata-w3c-json-form": "^1.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.61.1"
   },
   "engines": {
     "node": ">=20.0.6"
   },
-  "packageManager": "yarn@4.14.1"
+  "packageManager": "yarn@4.17.0"
 }
